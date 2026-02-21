@@ -12,6 +12,7 @@ import ChoiceButton from '../components/ChoiceButton';
 import Numpad from '../components/Numpad';
 import TimerBar from '../components/TimerBar';
 import QuitModal from '../components/QuitModal';
+import AppHeader from '../components/AppHeader';
 import { RootStackParamList } from '../../App';
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
@@ -145,11 +146,20 @@ export default function GameScreen() {
     ? { emoji: PLAYERS[duelPlayerIdx].emoji, name: PLAYERS[duelPlayerIdx].name, color: PLAYERS[duelPlayerIdx].color }
     : null;
 
-  if (!currentQuestion) return null;
+  if (!currentQuestion) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.inner}>
+          <AppHeader compact />
+        </View>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.inner}>
+        <AppHeader compact />
         <HUD
           questionNum={qi + 1}
           totalQ={totalQ}
@@ -207,11 +217,9 @@ export default function GameScreen() {
             </View>
           )}
 
-          {feedback !== '' && (
-            <Text style={[styles.feedback, feedbackType === 'correct' ? styles.feedbackCorrect : styles.feedbackWrong]}>
-              {feedback}
-            </Text>
-          )}
+          <Text style={[styles.feedback, feedbackType === 'correct' ? styles.feedbackCorrect : styles.feedbackWrong]}>
+            {feedback || ' '}
+          </Text>
         </View>
 
         <TouchableOpacity style={styles.abandonBtn} onPress={() => setShowQuit(true)} activeOpacity={0.7}>

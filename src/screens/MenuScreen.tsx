@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, BorderRadius, Spacing } from '../constants/theme';
 import { useGame } from '../context/GameContext';
-import Logo from '../components/Logo';
+import AppHeader from '../components/AppHeader';
 import TableButton from '../components/TableButton';
 import ModeCard from '../components/ModeCard';
 import { RootStackParamList } from '../../App';
@@ -44,23 +44,24 @@ export default function MenuScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
-        <Logo />
-        <Text style={styles.title}>Multiplicator</Text>
+        <AppHeader />
         <Text style={styles.sub}>Choisis tes options et joue !</Text>
 
         <Text style={styles.label}>{'\u{1F4DA}'} Tables {'\u00E0'} r{'\u00E9'}viser</Text>
         <View style={styles.tableGrid}>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-            <TableButton
-              key={i}
-              value={i}
-              selected={selectedTables.includes(i)}
-              onPress={() => toggleTable(i)}
-            />
-          ))}
+          <View style={styles.tableRow}>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <TableButton key={i} value={i} selected={selectedTables.includes(i)} onPress={() => toggleTable(i)} />
+            ))}
+          </View>
+          <View style={styles.tableRow}>
+            {[6, 7, 8, 9, 10].map((i) => (
+              <TableButton key={i} value={i} selected={selectedTables.includes(i)} onPress={() => toggleTable(i)} />
+            ))}
+          </View>
         </View>
 
-        <Text style={styles.label}>{'\u{1F3AE}'} Mode de jeu (solo)</Text>
+        <Text style={styles.label}>{'\u{1F3AE}'} Mode de jeu</Text>
         <View style={styles.modeGrid}>
           {MODES.map((m) => (
             <ModeCard
@@ -137,13 +138,6 @@ const styles = StyleSheet.create({
     shadowRadius: 32,
     elevation: 8,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    textAlign: 'center',
-    color: Colors.primary,
-    marginBottom: 6,
-  },
   sub: {
     textAlign: 'center',
     color: Colors.muted,
@@ -158,10 +152,12 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   tableGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 8,
     marginBottom: 20,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    gap: 8,
   },
   modeGrid: {
     flexDirection: 'row',

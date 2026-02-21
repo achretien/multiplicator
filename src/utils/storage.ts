@@ -1,7 +1,31 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HISTORY_KEY = 'tables-history';
+const CONFIG_KEY = 'tables-config';
 const MAX_ENTRIES = 50;
+
+export interface GameConfig {
+  selectedTables: number[];
+  selectedMode: 'qcm' | 'input' | 'timer';
+  totalQ: number;
+}
+
+export async function loadConfig(): Promise<GameConfig | null> {
+  try {
+    const raw = await AsyncStorage.getItem(CONFIG_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function saveConfig(config: GameConfig): Promise<void> {
+  try {
+    await AsyncStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 export interface SoloHistoryEntry {
   date: string;

@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Colors, BorderRadius, Spacing } from '../constants/theme';
 import { loadHistory, clearHistoryStorage, HistoryEntry } from '../utils/storage';
 import HistoryEntryRow from '../components/HistoryEntry';
+import AppHeader from '../components/AppHeader';
 import { RootStackParamList } from '../../App';
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
@@ -41,6 +42,7 @@ export default function HistoryScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
+        <AppHeader compact />
         <Text style={styles.title}>{'\u{1F4DC}'} Historique</Text>
         <Text style={styles.sub}>Toutes tes parties sauvegard{'\u00E9'}es</Text>
 

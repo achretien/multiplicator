@@ -29,8 +29,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    width: '18%',
-    flexGrow: 1,
+    flex: 1,
   },
   selected: {
     borderColor: Colors.primary,

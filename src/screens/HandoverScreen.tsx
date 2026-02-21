@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Colors, BorderRadius, Spacing } from '../constants/theme';
-import { PLAYERS } from '../constants/theme';
+import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
+import AppHeader from '../components/AppHeader';
 import { useGame } from '../context/GameContext';
 import { RootStackParamList } from '../../App';
 
@@ -29,6 +29,7 @@ export default function HandoverScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
+        <AppHeader compact />
         <Text style={styles.emoji}>{player.emoji}</Text>
         <Text style={styles.name}>{player.name}</Text>
         <Text style={styles.sub}>{subText}</Text>

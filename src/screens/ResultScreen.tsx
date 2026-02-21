@@ -7,6 +7,7 @@ import { Colors, BorderRadius, Spacing } from '../constants/theme';
 import { useGame } from '../context/GameContext';
 import { getResultData } from '../utils/gameLogic';
 import StarsRow from '../components/StarsRow';
+import AppHeader from '../components/AppHeader';
 import { RootStackParamList } from '../../App';
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
@@ -27,6 +28,7 @@ export default function ResultScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
+        <AppHeader compact />
         <Text style={styles.emoji}>{emoji}</Text>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.sub}>{sub}</Text>

@@ -30,7 +30,7 @@ export default function HUD({ questionNum, totalQ, score, streak, playerBadge }:
       </View>
       <View style={styles.item}>
         <Text style={styles.val}>{'\u{1F525}'}{streak}</Text>
-        <Text style={styles.lbl}>S\u00C9RIE</Text>
+        <Text style={styles.lbl}>SÉRIE</Text>
       </View>
     </View>
   );

@@ -7,6 +7,7 @@ import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
 import { useGame } from '../context/GameContext';
 import { saveGame, DuelHistoryEntry } from '../utils/storage';
 import DuelScoreCard from '../components/DuelScoreCard';
+import AppHeader from '../components/AppHeader';
 import { RootStackParamList } from '../../App';
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
@@ -58,6 +59,7 @@ export default function DuelResultScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
+        <AppHeader compact />
         <LinearGradient
           colors={bannerColors}
           start={{ x: 0, y: 0 }}

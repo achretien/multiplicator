@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { Question, genQuestions, genChoices, computeScore, getRandomCorrectMessage, getResultData } from '../utils/gameLogic';
-import { saveGame, SoloHistoryEntry, DuelHistoryEntry } from '../utils/storage';
+import { saveGame, loadConfig, saveConfig, SoloHistoryEntry, DuelHistoryEntry } from '../utils/storage';
 import { PLAYERS } from '../constants/theme';
 
 export interface DuelPlayerResult {
@@ -70,6 +70,22 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [feedback, setFeedback] = useState('');
   const [feedbackType, setFeedbackType] = useState<'correct' | 'wrong' | ''>('');
   const [choices, setChoices] = useState<number[]>([]);
+
+  // Load saved config on mount
+  useEffect(() => {
+    loadConfig().then((config) => {
+      if (config) {
+        setSelectedTables(config.selectedTables);
+        setSelectedMode(config.selectedMode);
+        setTotalQ(config.totalQ);
+      }
+    });
+  }, []);
+
+  // Persist config when it changes
+  useEffect(() => {
+    saveConfig({ selectedTables, selectedMode, totalQ });
+  }, [selectedTables, selectedMode, totalQ]);
 
   const scoreRef = useRef(0);
   const correctRef = useRef(0);
