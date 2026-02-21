@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
+import { getStrings } from '../constants/strings';
 import { useGame } from '../context/GameContext';
 import { saveGame, DuelHistoryEntry } from '../utils/storage';
 import DuelScoreCard from '../components/DuelScoreCard';
@@ -41,6 +42,7 @@ export default function DuelResultScreen() {
 
   if (!child || !papa) return null;
 
+  const s = getStrings();
   const childWins = child.score > papa.score;
   const draw = child.score === papa.score;
   const winner = draw ? null : (childWins ? PLAYERS[0] : PLAYERS[1]);
@@ -70,10 +72,10 @@ export default function DuelResultScreen() {
             {draw ? '\u{1F91D}' : '\u{1F3C6}'}
           </Text>
           <Text style={styles.winnerName}>
-            {draw ? '\u00C9galit\u00E9 !' : `${winner!.emoji} ${winner!.name}`}
+            {draw ? s.duelEquality : `${winner!.emoji} ${winner!.name}`}
           </Text>
           <Text style={styles.winnerSub}>
-            {draw ? "Vous \u00EAtes aussi forts l'un que l'autre !" : 'a remport\u00E9 le duel !'}
+            {draw ? s.duelEqualitySub : s.duelWonSuffix}
           </Text>
         </LinearGradient>
 
@@ -104,12 +106,12 @@ export default function DuelResultScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.btnDuel}
           >
-            <Text style={styles.btnDuelText}>{'\u2694\uFE0F'} Revanche !</Text>
+            <Text style={styles.btnDuelText}>{s.rematch}</Text>
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.popToTop()} activeOpacity={0.7}>
-          <Text style={styles.btnSecondaryText}>{'\u{1F3E0}'} Menu</Text>
+          <Text style={styles.btnSecondaryText}>{s.menu}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

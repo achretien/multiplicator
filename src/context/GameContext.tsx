@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { Question, genQuestions, genChoices, computeScore, getRandomCorrectMessage, getResultData } from '../utils/gameLogic';
 import { saveGame, loadConfig, saveConfig, SoloHistoryEntry } from '../utils/storage';
+import { getStrings } from '../constants/strings';
 
 export interface DuelPlayerResult {
   score: number;
@@ -151,7 +152,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       streakRef.current = 0;
       setWrong(newWrong);
       setStreak(0);
-      setFeedback('\u274C La r\u00E9ponse \u00E9tait ' + ans);
+      setFeedback(getStrings().wrongAnswer(ans));
       setFeedbackType('wrong');
     }
   }, []);

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, Platform }
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Colors, BorderRadius, Spacing } from '../constants/theme';
+import { getStrings } from '../constants/strings';
 import { loadHistory, clearHistoryStorage, HistoryEntry } from '../utils/storage';
 import HistoryEntryRow from '../components/HistoryEntry';
 import AppHeader from '../components/AppHeader';
@@ -18,51 +19,51 @@ export default function HistoryScreen() {
     loadHistory().then(setHistory);
   }, []);
 
+  const s = getStrings();
+
   const handleClear = useCallback(() => {
     const doClear = async () => {
       await clearHistoryStorage();
       setHistory([]);
     };
     if (Platform.OS === 'web') {
-      if (window.confirm("Effacer tout l'historique ?")) {
+      if (window.confirm(s.historyClearConfirm)) {
         doClear();
       }
     } else {
       Alert.alert(
-        'Effacer l\'historique',
-        "Effacer tout l'historique ?",
+        s.historyClearTitle,
+        s.historyClearConfirm,
         [
-          { text: 'Annuler', style: 'cancel' },
-          { text: 'Effacer', style: 'destructive', onPress: doClear },
+          { text: s.historyCancel, style: 'cancel' },
+          { text: s.historyClearAction, style: 'destructive', onPress: doClear },
         ]
       );
     }
-  }, []);
+  }, [s]);
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
         <AppHeader compact />
-        <Text style={styles.title}>{'\u{1F4DC}'} Historique</Text>
-        <Text style={styles.sub}>Toutes tes parties sauvegard{'\u00E9'}es</Text>
+        <Text style={styles.title}>{s.historyTitle}</Text>
+        <Text style={styles.sub}>{s.historySub}</Text>
 
         {history.length === 0 ? (
-          <Text style={styles.empty}>
-            {'\u{1F634}'} Aucune partie enregistr{'\u00E9'}e{'\n'}Joue ta premi{'\u00E8'}re partie !
-          </Text>
+          <Text style={styles.empty}>{s.historyEmpty}</Text>
         ) : (
           <>
             {history.map((e, i) => (
               <HistoryEntryRow key={i} entry={e} />
             ))}
             <TouchableOpacity style={styles.btnClear} onPress={handleClear} activeOpacity={0.7}>
-              <Text style={styles.btnClearText}>{"\u{1F5D1}\uFE0F Effacer l'historique"}</Text>
+              <Text style={styles.btnClearText}>{s.historyClear}</Text>
             </TouchableOpacity>
           </>
         )}
 
         <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.goBack()} activeOpacity={0.7}>
-          <Text style={styles.btnSecondaryText}>{'\u{1F3E0}'} Menu</Text>
+          <Text style={styles.btnSecondaryText}>{s.menu}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

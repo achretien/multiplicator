@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
+import { getStrings } from '../constants/strings';
 import AppHeader from '../components/AppHeader';
 import { useGame } from '../context/GameContext';
 import { RootStackParamList } from '../../App';
@@ -14,10 +15,11 @@ export default function HandoverScreen() {
   const nav = useNavigation<NavProp>();
   const { duelPlayerIdx, initRound } = useGame();
 
+  const s = getStrings();
   const player = PLAYERS[duelPlayerIdx];
   const subText = duelPlayerIdx === 0
-    ? "C'est ton tour ! Pr\u00EAt(e) ?"
-    : `Passe la tablette \u00E0 ${player.name} ! Pr\u00EAt ?`;
+    ? s.handoverYourTurn
+    : s.handoverPassTablet(player.name);
 
   const gradientEnd = duelPlayerIdx === 0 ? '#a78bfa' : '#ffa07a';
 
@@ -40,7 +42,7 @@ export default function HandoverScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.btn}
           >
-            <Text style={styles.btnText}>{"C'est parti !"} {'\u{1F680}'}</Text>
+            <Text style={styles.btnText}>{s.handoverGo} {'\u{1F680}'}</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>

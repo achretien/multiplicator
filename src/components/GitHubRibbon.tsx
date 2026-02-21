@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, Platform, Linking, TouchableOpacity } from 'react-native';
 import { Colors } from '../constants/theme';
+import { getStrings } from '../constants/strings';
 
 const REPO_URL = 'https://github.com/achretien/multiplicator';
 
@@ -13,7 +14,7 @@ export default function GitHubRibbon() {
       style={styles.ribbon}
       activeOpacity={0.8}
     >
-      <Text style={styles.text}>GitHub</Text>
+      <Text style={styles.text}>{getStrings().github}</Text>
     </TouchableOpacity>
   );
 }

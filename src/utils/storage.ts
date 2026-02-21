@@ -84,11 +84,14 @@ export async function clearHistoryStorage(): Promise<void> {
   }
 }
 
+import { getStrings } from '../constants/strings';
+
 export function formatDate(iso: string): string {
+  const s = getStrings();
   const d = new Date(iso);
   return (
-    d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) +
-    ' \u00E0 ' +
-    d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    d.toLocaleDateString(s.dateLocale, { day: '2-digit', month: 'short', year: 'numeric' }) +
+    s.dateTimeSeparator +
+    d.toLocaleTimeString(s.dateLocale, { hour: '2-digit', minute: '2-digit' })
   );
 }

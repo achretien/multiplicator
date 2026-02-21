@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, BorderRadius, Spacing } from '../constants/theme';
+import { getStrings } from '../constants/strings';
 import { useGame } from '../context/GameContext';
 import AppHeader from '../components/AppHeader';
 import TableButton from '../components/TableButton';
@@ -13,11 +14,14 @@ import { RootStackParamList } from '../../App';
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
-const MODES = [
-  { key: 'qcm' as const, icon: '\u{1F518}', name: 'Choix multiple' },
-  { key: 'input' as const, icon: '\u270F\uFE0F', name: '\u00C9crire' },
-  { key: 'timer' as const, icon: '\u23F1\uFE0F', name: 'Chrono' },
-];
+function getModes() {
+  const s = getStrings();
+  return [
+    { key: 'qcm' as const, icon: '\u{1F518}', name: s.modeQcm },
+    { key: 'input' as const, icon: '\u270F\uFE0F', name: s.modeInput },
+    { key: 'timer' as const, icon: '\u23F1\uFE0F', name: s.modeTimer },
+  ];
+}
 
 const QUESTION_COUNTS = [
   { value: 10, icon: '\u{1F3AF}' },
@@ -28,6 +32,8 @@ const QUESTION_COUNTS = [
 export default function MenuScreen() {
   const nav = useNavigation<NavProp>();
   const { selectedTables, selectedMode, totalQ, toggleTable, setMode, setTotalQ, setIsDuel, resetDuel, initRound } = useGame();
+  const s = getStrings();
+  const MODES = getModes();
 
   const startSolo = () => {
     setIsDuel(false);
@@ -47,9 +53,9 @@ export default function MenuScreen() {
       <View style={[styles.card, { overflow: 'hidden' }]}>
         <GitHubRibbon />
         <AppHeader />
-        <Text style={styles.sub}>Choisis tes options et joue !</Text>
+        <Text style={styles.sub}>{s.appSubtitle}</Text>
 
-        <Text style={styles.label}>{'\u{1F4DA}'} Tables {'\u00E0'} r{'\u00E9'}viser</Text>
+        <Text style={styles.label}>{s.tablesToReview}</Text>
         <View style={styles.tableGrid}>
           <View style={styles.tableRow}>
             {[1, 2, 3, 4, 5].map((i) => (
@@ -63,7 +69,7 @@ export default function MenuScreen() {
           </View>
         </View>
 
-        <Text style={styles.label}>{'\u{1F3AE}'} Mode de jeu</Text>
+        <Text style={styles.label}>{s.gameMode}</Text>
         <View style={styles.modeGrid}>
           {MODES.map((m) => (
             <ModeCard
@@ -76,7 +82,7 @@ export default function MenuScreen() {
           ))}
         </View>
 
-        <Text style={styles.label}>{'\u2753'} Nombre de questions</Text>
+        <Text style={styles.label}>{s.questionCount}</Text>
         <View style={[styles.modeGrid, { marginBottom: 20 }]}>
           {QUESTION_COUNTS.map((q) => (
             <ModeCard
@@ -96,7 +102,7 @@ export default function MenuScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.btnStart}
           >
-            <Text style={styles.btnStartText}>{'\u{1F680}'} Jouer en solo</Text>
+            <Text style={styles.btnStartText}>{s.playSolo}</Text>
           </LinearGradient>
         </TouchableOpacity>
 
@@ -107,12 +113,12 @@ export default function MenuScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.btnStart}
           >
-            <Text style={styles.btnStartText}>{'\u2694\uFE0F'} Duel Enfant vs Parent !</Text>
+            <Text style={styles.btnStartText}>{s.playDuel}</Text>
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.navigate('History')} activeOpacity={0.7}>
-          <Text style={styles.btnSecondaryText}>{'\u{1F4DC}'} Historique des parties</Text>
+          <Text style={styles.btnSecondaryText}>{s.historyButton}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

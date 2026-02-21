@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, BorderRadius, Spacing } from '../constants/theme';
+import { getStrings } from '../constants/strings';
 import { useGame } from '../context/GameContext';
 import { getResultData } from '../utils/gameLogic';
 import StarsRow from '../components/StarsRow';
@@ -17,6 +18,7 @@ export default function ResultScreen() {
   const { score, correct, wrong, maxStreak, totalQ, initRound, setIsDuel, resetDuel } = useGame();
 
   const { emoji, title, sub, stars } = getResultData(correct, totalQ);
+  const s = getStrings();
 
   const replay = () => {
     setIsDuel(false);
@@ -33,21 +35,21 @@ export default function ResultScreen() {
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.sub}>{sub}</Text>
         <Text style={styles.scoreBig}>{score}</Text>
-        <Text style={styles.scoreLabel}>points</Text>
+        <Text style={styles.scoreLabel}>{s.points}</Text>
         <StarsRow stars={stars} />
 
         <View style={styles.statsRow}>
           <View style={styles.stat}>
             <Text style={[styles.statVal, { color: Colors.success }]}>{correct}</Text>
-            <Text style={styles.statLbl}>{'\u2705'} Bonnes</Text>
+            <Text style={styles.statLbl}>{s.correctLabel}</Text>
           </View>
           <View style={styles.stat}>
             <Text style={[styles.statVal, { color: Colors.secondary }]}>{wrong}</Text>
-            <Text style={styles.statLbl}>{'\u274C'} Erreurs</Text>
+            <Text style={styles.statLbl}>{s.errorsLabel}</Text>
           </View>
           <View style={styles.stat}>
             <Text style={[styles.statVal, { color: Colors.warn }]}>{maxStreak}</Text>
-            <Text style={styles.statLbl}>{'\u{1F525}'} S{'\u00E9'}rie max</Text>
+            <Text style={styles.statLbl}>{s.maxStreakLabel}</Text>
           </View>
         </View>
 
@@ -58,12 +60,12 @@ export default function ResultScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.btnStart}
           >
-            <Text style={styles.btnStartText}>{'\u{1F504}'} Rejouer</Text>
+            <Text style={styles.btnStartText}>{s.replay}</Text>
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.popToTop()} activeOpacity={0.7}>
-          <Text style={styles.btnSecondaryText}>{'\u{1F3E0}'} Menu</Text>
+          <Text style={styles.btnSecondaryText}>{s.menu}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

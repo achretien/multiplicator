@@ -50,29 +50,17 @@ export function computeScore(currentScore: number, streak: number): number {
   return currentScore + Math.max(10, 10 + streak * 2);
 }
 
+import { getStrings } from '../constants/strings';
+
 export function getResultData(correct: number, totalQ: number) {
+  const s = getStrings();
   const pct = correct / totalQ;
-  let emoji: string, title: string, sub: string;
-  if (pct >= 0.9) {
-    emoji = '\u{1F3C6}'; title = 'Incroyable !'; sub = 'Tu es un champion des tables !';
-  } else if (pct >= 0.7) {
-    emoji = '\u{1F31F}'; title = 'Tr\u00E8s bien !'; sub = 'Continue comme \u00E7a !';
-  } else if (pct >= 0.5) {
-    emoji = '\u{1F44D}'; title = 'Bien jou\u00E9 !'; sub = "Encore un peu d'entra\u00EEnement !";
-  } else {
-    emoji = '\u{1F4AA}'; title = 'Courage !'; sub = 'Pratique encore, tu vas y arriver !';
-  }
+  const tier = pct >= 0.9 ? s.resultTier1 : pct >= 0.7 ? s.resultTier2 : pct >= 0.5 ? s.resultTier3 : s.resultTier4;
   const stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : 1;
-  return { emoji, title, sub, stars };
+  return { ...tier, stars };
 }
 
-const CORRECT_MESSAGES = [
-  '\u2B50 Excellent !',
-  '\u{1F389} Parfait !',
-  '\u{1F525} Super !',
-  '\u{1F4AA} Bravo !',
-];
-
 export function getRandomCorrectMessage(): string {
-  return CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)];
+  const msgs = getStrings().correctMessages;
+  return msgs[Math.floor(Math.random() * msgs.length)];
 }

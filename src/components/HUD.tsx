@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../constants/theme';
+import { getStrings } from '../constants/strings';
 
 interface Props {
   questionNum: number;
@@ -11,11 +12,12 @@ interface Props {
 }
 
 export default function HUD({ questionNum, totalQ, score, streak, playerBadge }: Props) {
+  const s = getStrings();
   return (
     <View style={styles.hud}>
       <View style={styles.item}>
         <Text style={styles.val}>{questionNum}/{totalQ}</Text>
-        <Text style={styles.lbl}>QUESTION</Text>
+        <Text style={styles.lbl}>{s.hudQuestion}</Text>
       </View>
       {playerBadge && (
         <View style={styles.item}>
@@ -26,11 +28,11 @@ export default function HUD({ questionNum, totalQ, score, streak, playerBadge }:
       )}
       <View style={styles.item}>
         <Text style={styles.val}>{score}</Text>
-        <Text style={styles.lbl}>SCORE</Text>
+        <Text style={styles.lbl}>{s.hudScore}</Text>
       </View>
       <View style={styles.item}>
         <Text style={styles.val}>{'\u{1F525}'}{streak}</Text>
-        <Text style={styles.lbl}>SÉRIE</Text>
+        <Text style={styles.lbl}>{s.hudStreak}</Text>
       </View>
     </View>
   );

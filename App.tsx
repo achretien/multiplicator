@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { GameProvider } from './src/context/GameContext';
+import { getStrings } from './src/constants/strings';
 import MenuScreen from './src/screens/MenuScreen';
 import HandoverScreen from './src/screens/HandoverScreen';
 import GameScreen from './src/screens/GameScreen';
@@ -24,7 +25,11 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <GameProvider>
-      <NavigationContainer>
+      <NavigationContainer
+        documentTitle={{
+          formatter: () => getStrings().appName,
+        }}
+      >
         <Stack.Navigator
           initialRouteName="Menu"
           screenOptions={{ headerShown: false, animation: 'fade' }}

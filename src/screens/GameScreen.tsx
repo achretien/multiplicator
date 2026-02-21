@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
+import { getStrings } from '../constants/strings';
 import { useGame } from '../context/GameContext';
 import HUD from '../components/HUD';
 import ProgressBar from '../components/ProgressBar';
@@ -169,7 +170,7 @@ export default function GameScreen() {
         <ProgressBar current={qi} total={totalQ} />
 
         <View style={styles.card}>
-          <Text style={styles.qLabel}>Question {qi + 1}</Text>
+          <Text style={styles.qLabel}>{getStrings().questionLabel(qi + 1)}</Text>
           <Text style={styles.question}>
             <Text style={styles.highlight}>{currentQuestion.a}</Text>
             {' \u00D7 '}
@@ -211,7 +212,7 @@ export default function GameScreen() {
                 disabled={inputValue === '' || answered}
                 activeOpacity={0.7}
               >
-                <Text style={styles.btnOkText}>{'\u2713'} Valider</Text>
+                <Text style={styles.btnOkText}>{getStrings().validate}</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -222,7 +223,7 @@ export default function GameScreen() {
         </View>
 
         <TouchableOpacity style={styles.abandonBtn} onPress={() => setShowQuit(true)} activeOpacity={0.7}>
-          <Text style={styles.abandonText}>{'\u{1F3E0}'} Abandonner</Text>
+          <Text style={styles.abandonText}>{getStrings().abandon}</Text>
         </TouchableOpacity>
 
         <QuitModal

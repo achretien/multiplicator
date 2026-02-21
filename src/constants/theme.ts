@@ -43,13 +43,15 @@ export const BorderRadius = {
   pill: 99,
 };
 
+import { getStrings } from './strings';
+
 export const PLAYERS = [
-  { key: 'child' as const, name: 'Enfant', emoji: '\u{1F476}', color: Colors.child },
-  { key: 'papa' as const, name: 'Parent', emoji: '\u{1F468}', color: Colors.papa },
+  { key: 'child' as const, name: getStrings().playerChild, emoji: '\u{1F476}', color: Colors.child },
+  { key: 'papa' as const, name: getStrings().playerParent, emoji: '\u{1F468}', color: Colors.papa },
 ];
 
 export const MODE_LABELS: Record<string, string> = {
-  qcm: 'Choix multiple',
-  input: '\u00C9crire',
-  timer: 'Chrono',
+  qcm: getStrings().modeQcm,
+  input: getStrings().modeInput,
+  timer: getStrings().modeTimer,
 };
