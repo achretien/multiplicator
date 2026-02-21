@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>🌟 Tables de Multiplication</title>
+<title>🌟 Multiplicator</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -71,12 +71,29 @@
   .choice-btn.wrong { background: var(--secondary); border-color: var(--secondary); color: white; }
 
   /* INPUT */
-  .input-wrap { display: flex; gap: 10px; width: 100%; }
+  .input-wrap { display: flex; flex-direction: column; gap: 10px; width: 100%; }
   #answerInput {
-    flex: 1; padding: 16px; border: 3px solid #e0e0f0; border-radius: 16px;
+    width: 100%; padding: 16px; border: 3px solid #e0e0f0; border-radius: 16px;
     font-size: 1.8rem; font-weight: 800; text-align: center; outline: none;
     color: var(--text); transition: border-color 0.2s; background: white;
+    cursor: default; caret-color: transparent;
   }
+  .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin-top: 4px; }
+  .numpad-btn {
+    padding: 14px;
+    border: 2px solid #e0e0f0;
+    border-radius: 14px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: white;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .numpad-btn:active { background: #f0eeff; border-color: var(--primary); transform: scale(0.95); }
+  .numpad-btn.del { background: #fff0f3; color: var(--secondary); border-color: #ffd6e0; }
+  .numpad-btn.zero { grid-column: span 2; }
   #answerInput:focus { border-color: var(--primary); }
   #answerInput::-webkit-outer-spin-button,
   #answerInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -84,15 +101,11 @@
   #answerInput.correct { border-color: var(--success); background: #eaffef; }
   #answerInput.wrong { border-color: var(--secondary); background: #fff0f3; }
   .btn-ok {
-    padding: 16px 20px;
+    width: 100%; padding: 16px;
     background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 16px;
-    font-size: 1.4rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: opacity 0.2s;
+    color: white; border: none;
+    border-radius: 16px; font-size: 1.2rem;
+    font-weight: 800; transition: opacity 0.2s;
   }
   .btn-ok:disabled { opacity: 0.35; cursor: not-allowed; }
 
@@ -160,8 +173,21 @@
 <!-- MENU -->
 <div class="screen active" id="menuScreen">
   <div class="card">
-    <div class="menu-stars">🌟</div>
-    <div class="menu-title">Tables ×</div>
+    <div class="menu-stars">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="72" height="72" rx="18" fill="url(#grad)"/>
+        <text x="36" y="30" text-anchor="middle" font-size="18" font-weight="900" fill="white" font-family="Segoe UI, Arial" dy="0">8 × 7</text>
+        <line x1="14" y1="40" x2="58" y2="40" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <text x="36" y="58" text-anchor="middle" font-size="18" font-weight="900" fill="#ffd166" font-family="Segoe UI, Arial">= ?</text>
+        <defs>
+          <linearGradient id="grad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#6c63ff"/>
+            <stop offset="100%" stop-color="#a78bfa"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="menu-title">Multiplicator</div>
     <div class="menu-sub">Choisis tes options et joue !</div>
     <div class="label">📚 Tables à réviser</div>
     <div class="table-grid" id="tableGrid"></div>
@@ -178,7 +204,7 @@
       <div class="mode-card" data-q="30"><div class="icon">🏆</div><div class="name">30</div></div>
     </div>
     <button class="btn-start" onclick="startSolo()">🚀 Jouer en solo</button>
-    <button class="btn-duel" onclick="startDuel()">⚔️ Duel Enfant vs Papa !</button>
+    <button class="btn-duel" onclick="startDuel()">⚔️ Duel Enfant vs Parent !</button>
     <button class="btn-secondary" onclick="showHistory()">📜 Historique des parties</button>
   </div>
 </div>
@@ -211,8 +237,21 @@
     </div>
     <div class="choices" id="choicesWrap"></div>
     <div class="input-wrap" id="inputWrap" style="display:none">
-      <input type="number" id="answerInput" inputmode="numeric" autocomplete="off">
-      <button class="btn-ok" id="btnOk" onclick="checkInput()">✓</button>
+      <input type="number" id="answerInput" inputmode="none" autocomplete="off" readonly>
+      <div class="numpad" id="numpad">
+        <button class="numpad-btn" onclick="numpadPress('1')">1</button>
+        <button class="numpad-btn" onclick="numpadPress('2')">2</button>
+        <button class="numpad-btn" onclick="numpadPress('3')">3</button>
+        <button class="numpad-btn" onclick="numpadPress('4')">4</button>
+        <button class="numpad-btn" onclick="numpadPress('5')">5</button>
+        <button class="numpad-btn" onclick="numpadPress('6')">6</button>
+        <button class="numpad-btn" onclick="numpadPress('7')">7</button>
+        <button class="numpad-btn" onclick="numpadPress('8')">8</button>
+        <button class="numpad-btn" onclick="numpadPress('9')">9</button>
+        <button class="numpad-btn zero" onclick="numpadPress('0')">0</button>
+        <button class="numpad-btn del" onclick="numpadDelete()">⌫</button>
+      </div>
+      <button class="btn-ok" id="btnOk" onclick="checkInput()">✓ Valider</button>
     </div>
     <div class="feedback" id="feedback"></div>
   </div>
@@ -266,7 +305,7 @@
 <script>
 const PLAYERS = [
   { key:'child', name:'Enfant', emoji:'👶', color:'var(--child)' },
-  { key:'papa',  name:'Papa',   emoji:'👨', color:'var(--papa)'  }
+  { key:'papa',  name:'Parent',  emoji:'👨', color:'var(--papa)'  }
 ];
 const modeLabels = { qcm:'Choix multiple', input:'Écrire', timer:'Chrono' };
 
@@ -303,6 +342,18 @@ document.querySelectorAll('.mode-card[data-q]').forEach(el=>{
 document.getElementById('answerInput').addEventListener('input', function(){
   document.getElementById('btnOk').disabled = this.value.trim() === '';
 });
+
+function numpadPress(digit){
+  const inp = document.getElementById('answerInput');
+  if(inp.value.length >= 3) return; // max 3 chiffres
+  inp.value += digit;
+  document.getElementById('btnOk').disabled = false;
+}
+function numpadDelete(){
+  const inp = document.getElementById('answerInput');
+  inp.value = inp.value.slice(0, -1);
+  document.getElementById('btnOk').disabled = inp.value === '';
+}
 
 function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
 function shuffle(arr){return arr.sort(()=>Math.random()-0.5);}
@@ -409,8 +460,6 @@ function showQuestion(){
     const inp=document.getElementById('answerInput');
     inp.value=''; inp.className='';
     document.getElementById('btnOk').disabled=true;
-    setTimeout(()=>inp.focus(),100);
-    inp.onkeydown=e=>{if(e.key==='Enter'&&!document.getElementById('btnOk').disabled)checkInput();};
   }
 }
 
@@ -440,7 +489,7 @@ function selectChoice(btn,val,ans){
   if(answered)return; answered=true; clearTimer();
   btn.classList.add(val===ans?'correct':'wrong');
   if(val!==ans)document.querySelectorAll('.choice-btn').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('correct');});
-  document.querySelectorAll('.choice-btn').forEach(b=>b.onclick=null);
+  document.querySelectorAll('.choice-btn').forEach(b=>{b.onclick=null; b.style.pointerEvents='none';});
   handleResult(val===ans,ans);
 }
 function checkInput(){
@@ -531,9 +580,9 @@ async function showDuelResults(){
   await saveGame({date:new Date().toISOString(),type:'duel',totalQ,mode:selectedMode,tables:[...selectedTables].sort((a,b)=>a-b),winner:draw?'draw':(childWins?'child':'papa'),child:{score:child.score,correct:child.correct,wrong:child.wrong},papa:{score:papa.score,correct:papa.correct,wrong:papa.wrong},emoji:draw?'🤝':'🏆',stars:draw?2:3});
 }
 
-async function loadHistory(){try{const r=await window.storage.get('history');return r?JSON.parse(r.value):[];}catch{return [];}}
-async function saveGame(entry){try{const h=await loadHistory();h.unshift(entry);if(h.length>50)h.pop();await window.storage.set('history',JSON.stringify(h));}catch(e){console.error(e);}}
-async function clearHistory(){if(!confirm("Effacer tout l'historique ?"))return;try{await window.storage.delete('history');renderHistory([]);}catch(e){}}
+function loadHistory(){try{const r=localStorage.getItem('tables-history');return r?JSON.parse(r):[];}catch{return [];}}
+async function saveGame(entry){try{const h=loadHistory();h.unshift(entry);if(h.length>50)h.pop();localStorage.setItem('tables-history',JSON.stringify(h));}catch(e){console.error(e);}}
+async function clearHistory(){if(!confirm("Effacer tout l'historique ?"))return;try{localStorage.removeItem('tables-history');renderHistory([]);}catch(e){}}
 function formatDate(iso){const d=new Date(iso);return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
 function renderHistory(h){
   const list=document.getElementById('historyList'), btn=document.getElementById('btnClear');
