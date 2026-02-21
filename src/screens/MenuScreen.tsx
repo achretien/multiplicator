@@ -8,6 +8,7 @@ import { useGame } from '../context/GameContext';
 import AppHeader from '../components/AppHeader';
 import TableButton from '../components/TableButton';
 import ModeCard from '../components/ModeCard';
+import GitHubRibbon from '../components/GitHubRibbon';
 import { RootStackParamList } from '../../App';
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
@@ -43,7 +44,8 @@ export default function MenuScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.card}>
+      <View style={[styles.card, { overflow: 'hidden' }]}>
+        <GitHubRibbon />
         <AppHeader />
         <Text style={styles.sub}>Choisis tes options et joue !</Text>
 
