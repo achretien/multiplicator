@@ -14,7 +14,7 @@ type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function DuelResultScreen() {
   const nav = useNavigation<NavProp>();
-  const { duelResults, resetDuel, setIsDuel, setDuelPlayerIdx, initRound, selectedMode, selectedTables, totalQ } = useGame();
+  const { duelResults, resetDuel, setIsDuel, setDuelPlayerIdx, selectedMode, selectedTables, totalQ } = useGame();
 
   const child = duelResults[0];
   const papa = duelResults[1];
@@ -37,7 +37,7 @@ export default function DuelResultScreen() {
       };
       saveGame(entry);
     }
-  }, []);
+  }, [child, papa, selectedMode, selectedTables, totalQ]);
 
   if (!child || !papa) return null;
 

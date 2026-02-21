@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Animated } from 'react-native';
 import { Colors, BorderRadius } from '../constants/theme';
 
@@ -10,8 +10,8 @@ interface Props {
 }
 
 export default function ChoiceButton({ value, status, disabled, onPress }: Props) {
-  const scale = useRef(new Animated.Value(0.8)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
+  const scale = useMemo(() => new Animated.Value(0.8), []);
+  const opacity = useMemo(() => new Animated.Value(0), []);
 
   useEffect(() => {
     Animated.spring(scale, {
@@ -24,7 +24,7 @@ export default function ChoiceButton({ value, status, disabled, onPress }: Props
       duration: 200,
       useNativeDriver: true,
     }).start();
-  }, []);
+  }, [scale, opacity]);
 
   const bgColor =
     status === 'correct' ? Colors.success :

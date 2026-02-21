@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { Question, genQuestions, genChoices, computeScore, getRandomCorrectMessage, getResultData } from '../utils/gameLogic';
-import { saveGame, loadConfig, saveConfig, SoloHistoryEntry, DuelHistoryEntry } from '../utils/storage';
-import { PLAYERS } from '../constants/theme';
+import { saveGame, loadConfig, saveConfig, SoloHistoryEntry } from '../utils/storage';
 
 export interface DuelPlayerResult {
   score: number;

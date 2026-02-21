@@ -4,8 +4,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
 import { useGame } from '../context/GameContext';
-import { saveGame, DuelHistoryEntry } from '../utils/storage';
-import { getResultData } from '../utils/gameLogic';
 import HUD from '../components/HUD';
 import ProgressBar from '../components/ProgressBar';
 import ChoiceButton from '../components/ChoiceButton';
@@ -23,7 +21,7 @@ export default function GameScreen() {
   const {
     qi, totalQ, score, streak, selectedMode, isDuel, duelPlayerIdx,
     currentQuestion, answered, feedback, feedbackType, choices,
-    handleAnswer, nextQuestion, endRound, duelResults,
+    handleAnswer, nextQuestion, endRound,
     setDuelPlayerIdx,
   } = game;
 
@@ -43,9 +41,33 @@ export default function GameScreen() {
     }
   }, []);
 
-  // Reset UI per question
+  const finishRound = useCallback(async () => {
+    await endRound();
+    if (isDuel) {
+      if (duelPlayerIdx === 0) {
+        setDuelPlayerIdx(1);
+        nav.replace('Handover');
+      } else {
+        setTimeout(() => nav.replace('DuelResult'), 50);
+      }
+    } else {
+      nav.replace('Result');
+    }
+  }, [endRound, isDuel, duelPlayerIdx, nav, setDuelPlayerIdx]);
+
+  const advance = useCallback(() => {
+    const hasMore = nextQuestion();
+    if (!hasMore) {
+      finishRound();
+    }
+  }, [nextQuestion, finishRound]);
+
+  const advanceRef = useRef(advance);
+  useEffect(() => { advanceRef.current = advance; }, [advance]);
+
+  // Reset UI per question — synchronous setState is intentional here to reset on question change
   useEffect(() => {
-    setChoiceStatuses({});
+    setChoiceStatuses({}); // eslint-disable-line react-hooks/set-state-in-effect
     setInputValue('');
     setInputStatus('');
     setTimerLeft(10);
@@ -65,9 +87,8 @@ export default function GameScreen() {
           if (!answeredRef.current) {
             answeredRef.current = true;
             handleAnswer(false, currentQuestion.ans);
-            // Highlight correct choice
             setChoiceStatuses((prev) => ({ ...prev, [currentQuestion.ans]: 'correct' }));
-            setTimeout(() => advance(), 1800);
+            setTimeout(() => advanceRef.current(), 1800);
           }
         } else {
           setTimerLeft(left);
@@ -76,29 +97,7 @@ export default function GameScreen() {
     }
 
     return () => clearTimer();
-  }, [qi]);
-
-  const advance = useCallback(() => {
-    const hasMore = nextQuestion();
-    if (!hasMore) {
-      finishRound();
-    }
-  }, [nextQuestion, isDuel, duelPlayerIdx, duelResults]);
-
-  const finishRound = useCallback(async () => {
-    await endRound();
-    if (isDuel) {
-      if (duelPlayerIdx === 0) {
-        setDuelPlayerIdx(1);
-        nav.replace('Handover');
-      } else {
-        // Need to wait for duelResults to update, navigate in next tick
-        setTimeout(() => nav.replace('DuelResult'), 50);
-      }
-    } else {
-      nav.replace('Result');
-    }
-  }, [endRound, isDuel, duelPlayerIdx, nav, setDuelPlayerIdx]);
+  }, [qi]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onChoicePress = useCallback((val: number) => {
     if (answeredRef.current || !currentQuestion) return;
@@ -116,8 +115,8 @@ export default function GameScreen() {
     }
     setChoiceStatuses(newStatuses);
     handleAnswer(isCorrect, ans);
-    setTimeout(() => advance(), 1400);
-  }, [currentQuestion, handleAnswer, advance, clearTimer]);
+    setTimeout(() => advanceRef.current(), 1400);
+  }, [currentQuestion, handleAnswer, clearTimer]);
 
   const onNumpadPress = useCallback((digit: string) => {
     setInputValue((prev) => {
@@ -139,8 +138,8 @@ export default function GameScreen() {
     const isCorrect = val === ans;
     setInputStatus(isCorrect ? 'correct' : 'wrong');
     handleAnswer(isCorrect, ans);
-    setTimeout(() => advance(), 1400);
-  }, [inputValue, currentQuestion, handleAnswer, advance]);
+    setTimeout(() => advanceRef.current(), 1400);
+  }, [inputValue, currentQuestion, handleAnswer]);
 
   const playerBadge = isDuel
     ? { emoji: PLAYERS[duelPlayerIdx].emoji, name: PLAYERS[duelPlayerIdx].name, color: PLAYERS[duelPlayerIdx].color }

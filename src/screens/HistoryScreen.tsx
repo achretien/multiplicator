@@ -56,7 +56,7 @@ export default function HistoryScreen() {
               <HistoryEntryRow key={i} entry={e} />
             ))}
             <TouchableOpacity style={styles.btnClear} onPress={handleClear} activeOpacity={0.7}>
-              <Text style={styles.btnClearText}>{'\u{1F5D1}\uFE0F'} Effacer l'historique</Text>
+              <Text style={styles.btnClearText}>{"\u{1F5D1}\uFE0F Effacer l'historique"}</Text>
             </TouchableOpacity>
           </>
         )}

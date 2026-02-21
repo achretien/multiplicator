@@ -40,7 +40,7 @@ export default function HandoverScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.btn}
           >
-            <Text style={styles.btnText}>C'est parti ! {'\u{1F680}'}</Text>
+            <Text style={styles.btnText}>{"C'est parti !"} {'\u{1F680}'}</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
