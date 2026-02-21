@@ -47,9 +47,9 @@ export interface DuelHistoryEntry {
   totalQ: number;
   mode: string;
   tables: number[];
-  winner: 'child' | 'papa' | 'draw';
+  winner: 'child' | 'parent' | 'draw';
   child: { score: number; correct: number; wrong: number };
-  papa: { score: number; correct: number; wrong: number };
+  parent: { score: number; correct: number; wrong: number };
   emoji: string;
   stars: number;
 }

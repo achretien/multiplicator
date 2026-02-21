@@ -15,7 +15,7 @@
     --card: #ffffff;
     --text: #2d2d4e;
     --child: #6c63ff;
-    --papa: #ff6584;
+    --parent: #ff6584;
   }
   body {
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -305,7 +305,7 @@
 <script>
 const PLAYERS = [
   { key:'child', name:'Enfant', emoji:'👶', color:'var(--child)' },
-  { key:'papa',  name:'Parent',  emoji:'👨', color:'var(--papa)'  }
+  { key:'parent',  name:'Parent',  emoji:'👨', color:'var(--parent)'  }
 ];
 const modeLabels = { qcm:'Choix multiple', input:'Écrire', timer:'Chrono' };
 
@@ -550,9 +550,9 @@ async function showSoloResults(){
 }
 
 async function showDuelResults(){
-  const [child,papa]=duelResults;
-  const childWins=child.score>papa.score;
-  const draw=child.score===papa.score;
+  const [child,parent]=duelResults;
+  const childWins=child.score>parent.score;
+  const draw=child.score===parent.score;
   const winner=draw?null:(childWins?PLAYERS[0]:PLAYERS[1]);
   const banner=document.getElementById('duelWinnerBanner');
   if(draw){
@@ -577,7 +577,7 @@ async function showDuelResults(){
     </div>`;
   }).join('');
   showScreen('duelResultScreen');
-  await saveGame({date:new Date().toISOString(),type:'duel',totalQ,mode:selectedMode,tables:[...selectedTables].sort((a,b)=>a-b),winner:draw?'draw':(childWins?'child':'papa'),child:{score:child.score,correct:child.correct,wrong:child.wrong},papa:{score:papa.score,correct:papa.correct,wrong:papa.wrong},emoji:draw?'🤝':'🏆',stars:draw?2:3});
+  await saveGame({date:new Date().toISOString(),type:'duel',totalQ,mode:selectedMode,tables:[...selectedTables].sort((a,b)=>a-b),winner:draw?'draw':(childWins?'child':'parent'),child:{score:child.score,correct:child.correct,wrong:child.wrong},parent:{score:parent.score,correct:parent.correct,wrong:parent.wrong},emoji:draw?'🤝':'🏆',stars:draw?2:3});
 }
 
 function loadHistory(){try{const r=localStorage.getItem('tables-history');return r?JSON.parse(r):[];}catch{return [];}}
@@ -590,8 +590,8 @@ function renderHistory(h){
   btn.style.display='block';
   list.innerHTML=h.map(e=>{
     if(e.type==='duel'){
-      const w=e.winner==='draw'?'Égalité 🤝':(e.winner==='child'?'👶 Enfant gagne 🏆':'👨 Papa gagne 🏆');
-      return `<div class="history-entry"><div class="h-emoji">⚔️</div><div class="h-info"><div style="font-weight:800;font-size:0.95rem;">${w}</div><div class="h-detail">👶 ${e.child.score}pts · 👨 ${e.papa.score}pts · ${modeLabels[e.mode]}</div><div class="h-date">${formatDate(e.date)}</div></div></div>`;
+      const w=e.winner==='draw'?'Égalité 🤝':(e.winner==='child'?'👶 Enfant gagne 🏆':'👨 Parent gagne 🏆');
+      return `<div class="history-entry"><div class="h-emoji">⚔️</div><div class="h-info"><div style="font-weight:800;font-size:0.95rem;">${w}</div><div class="h-detail">👶 ${e.child.score}pts · 👨 ${e.parent.score}pts · ${modeLabels[e.mode]}</div><div class="h-date">${formatDate(e.date)}</div></div></div>`;
     }
     return `<div class="history-entry"><div class="h-emoji">${e.emoji}</div><div class="h-info"><div style="font-weight:800;font-size:0.95rem;">${'⭐'.repeat(e.stars)} ${e.correct}/${e.totalQ} bonnes</div><div class="h-detail">Tables : ${e.tables.join(', ')} · ${modeLabels[e.mode]}</div><div class="h-date">${formatDate(e.date)}</div></div><div class="h-score">${e.score}<br><span style="font-size:0.7rem;color:#aaa;font-weight:400;">pts</span></div></div>`;
   }).join('');

@@ -7,7 +7,7 @@ export const Colors = {
   card: '#ffffff',
   text: '#2d2d4e',
   child: '#6c63ff',
-  papa: '#ff6584',
+  parent: '#ff6584',
   border: '#e0e0f0',
   muted: '#888',
   lightMuted: '#aaa',
@@ -47,7 +47,7 @@ import { getStrings } from './strings';
 
 export const PLAYERS = [
   { key: 'child' as const, name: getStrings().playerChild, emoji: '\u{1F476}', color: Colors.child },
-  { key: 'papa' as const, name: getStrings().playerParent, emoji: '\u{1F468}', color: Colors.papa },
+  { key: 'parent' as const, name: getStrings().playerParent, emoji: '\u{1F468}', color: Colors.parent },
 ];
 
 export const MODE_LABELS: Record<string, string> = {

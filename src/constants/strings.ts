@@ -89,7 +89,7 @@ export function getStrings() {
     historyCorrectCount: (correct: number, total: number) => `${correct}/${total} bonnes`,
     historyTables: (tables: number[]) => `Tables : ${tables.join(', ')}`,
     historyChildWins: '\u{1F476} Enfant gagne \u{1F3C6}',
-    historyParentWins: '\u{1F468} Papa gagne \u{1F3C6}',
+    historyParentWins: '\u{1F468} Parent gagne \u{1F3C6}',
     historyDraw: '\u00C9galit\u00E9 \u{1F91D}',
 
     // Date formatting

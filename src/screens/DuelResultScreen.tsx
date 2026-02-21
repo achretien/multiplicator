@@ -18,33 +18,33 @@ export default function DuelResultScreen() {
   const { duelResults, resetDuel, setIsDuel, setDuelPlayerIdx, selectedMode, selectedTables, totalQ } = useGame();
 
   const child = duelResults[0];
-  const papa = duelResults[1];
+  const parent = duelResults[1];
 
   useEffect(() => {
-    if (child && papa) {
-      const childWins = child.score > papa.score;
-      const draw = child.score === papa.score;
+    if (child && parent) {
+      const childWins = child.score > parent.score;
+      const draw = child.score === parent.score;
       const entry: DuelHistoryEntry = {
         date: new Date().toISOString(),
         type: 'duel',
         totalQ,
         mode: selectedMode,
         tables: [...selectedTables].sort((a, b) => a - b),
-        winner: draw ? 'draw' : (childWins ? 'child' : 'papa'),
+        winner: draw ? 'draw' : (childWins ? 'child' : 'parent'),
         child: { score: child.score, correct: child.correct, wrong: child.wrong },
-        papa: { score: papa.score, correct: papa.correct, wrong: papa.wrong },
+        parent: { score: parent.score, correct: parent.correct, wrong: parent.wrong },
         emoji: draw ? '\u{1F91D}' : '\u{1F3C6}',
         stars: draw ? 2 : 3,
       };
       saveGame(entry);
     }
-  }, [child, papa, selectedMode, selectedTables, totalQ]);
+  }, [child, parent, selectedMode, selectedTables, totalQ]);
 
-  if (!child || !papa) return null;
+  if (!child || !parent) return null;
 
   const s = getStrings();
-  const childWins = child.score > papa.score;
-  const draw = child.score === papa.score;
+  const childWins = child.score > parent.score;
+  const draw = child.score === parent.score;
   const winner = draw ? null : (childWins ? PLAYERS[0] : PLAYERS[1]);
 
   const bannerColors: [string, string] = draw

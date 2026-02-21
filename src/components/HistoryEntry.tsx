@@ -22,7 +22,7 @@ export default function HistoryEntryRow({ entry }: Props) {
         <View style={styles.info}>
           <Text style={styles.title}>{w}</Text>
           <Text style={styles.detail}>
-            {'\u{1F476}'} {entry.child.score}{s.pts} {'\u00B7'} {'\u{1F468}'} {entry.papa.score}{s.pts} {'\u00B7'} {MODE_LABELS[entry.mode] || entry.mode}
+            {'\u{1F476}'} {entry.child.score}{s.pts} {'\u00B7'} {'\u{1F468}'} {entry.parent.score}{s.pts} {'\u00B7'} {MODE_LABELS[entry.mode] || entry.mode}
           </Text>
           <Text style={styles.date}>{formatDate(entry.date)}</Text>
         </View>
