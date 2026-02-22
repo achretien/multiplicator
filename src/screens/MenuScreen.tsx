@@ -25,6 +25,7 @@ function getModes() {
 const TIMER_VALUES = [0, 10, 5, 2] as const;
 
 const QUESTION_COUNTS = [
+  ...(__DEV__ ? [{ value: 1, icon: '🛠️' }] : []),
   { value: 10, icon: '\u{1F3AF}' },
   { value: 20, icon: '\u{1F3AF}\u{1F3AF}' },
   { value: 30, icon: '\u{1F3C6}' },

@@ -42,6 +42,7 @@ interface GameContextType extends GameState {
   handleAnswer: (isCorrect: boolean, ans: number, elapsed?: number, given?: number) => void;
   nextQuestion: () => boolean;
   endRound: () => Promise<void>;
+  setLastEntry: (entry: HistoryEntry | null) => void;
   setIsDuel: (v: boolean) => void;
   setDuelPlayerIdx: (v: number) => void;
   resetDuel: () => void;
@@ -250,7 +251,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         questions, qi, score, correct, wrong, streak, maxStreak, answered,
         feedback, feedbackType, choices, currentQuestion, lastEntry,
         toggleTable, setMode, setTimer, setTotalQ, initRound, handleAnswer, nextQuestion,
-        endRound, setIsDuel, setDuelPlayerIdx, resetDuel,
+        endRound, setLastEntry, setIsDuel, setDuelPlayerIdx, resetDuel,
       }}
     >
       {children}

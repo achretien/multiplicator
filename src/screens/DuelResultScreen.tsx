@@ -15,7 +15,7 @@ type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function DuelResultScreen() {
   const nav = useNavigation<NavProp>();
-  const { duelResults, resetDuel, setIsDuel, setDuelPlayerIdx, selectedMode, selectedTables, totalQ } = useGame();
+  const { duelResults, resetDuel, setIsDuel, setDuelPlayerIdx, selectedMode, selectedTables, totalQ, setLastEntry, lastEntry } = useGame();
 
   const child = duelResults[0];
   const parent = duelResults[1];
@@ -36,9 +36,10 @@ export default function DuelResultScreen() {
         emoji: draw ? '\u{1F91D}' : '\u{1F3C6}',
         stars: draw ? 2 : 3,
       };
+      setLastEntry(entry);
       saveGame(entry);
     }
-  }, [child, parent, selectedMode, selectedTables, totalQ]);
+  }, [child, parent, selectedMode, selectedTables, totalQ, setLastEntry]);
 
   if (!child || !parent) return null;
 
@@ -109,6 +110,16 @@ export default function DuelResultScreen() {
             <Text style={styles.btnDuelText}>{s.rematch}</Text>
           </LinearGradient>
         </TouchableOpacity>
+
+        {lastEntry && (
+          <TouchableOpacity
+            style={[styles.btnSecondary, { marginBottom: 10 }]}
+            onPress={() => nav.navigate('GameDetail', { entry: lastEntry })}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.btnSecondaryText}>{s.detailButton}</Text>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.popToTop()} activeOpacity={0.7}>
           <Text style={styles.btnSecondaryText}>{s.menu}</Text>
