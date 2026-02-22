@@ -15,7 +15,10 @@ export function getStrings() {
     // Mode names
     modeQcm: 'Choix multiple',
     modeInput: '\u00C9crire',
-    modeTimer: 'Chrono',
+
+    // Timer option
+    timerLabel: '\u23F1\uFE0F Limite de temps',
+    timerOptions: ['Aucune', '10s', '5s', '2s'] as readonly string[],
 
     // Player names
     playerChild: 'Enfant',
@@ -68,7 +71,6 @@ export function getStrings() {
 
     // Duel score card
     pts: 'pts',
-    maxStreakCard: (n: number) => `\u{1F525} S\u00E9rie max : ${n}`,
 
     // Handover
     handoverYourTurn: "C'est ton tour ! Pr\u00EAt(e) ?",

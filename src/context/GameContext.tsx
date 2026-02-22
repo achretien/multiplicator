@@ -12,7 +12,8 @@ export interface DuelPlayerResult {
 
 interface GameState {
   selectedTables: number[];
-  selectedMode: 'qcm' | 'input' | 'timer';
+  selectedMode: 'qcm' | 'input';
+  selectedTimer: number;
   totalQ: number;
   isDuel: boolean;
   duelPlayerIdx: number;
@@ -32,10 +33,11 @@ interface GameState {
 
 interface GameContextType extends GameState {
   toggleTable: (t: number) => void;
-  setMode: (m: 'qcm' | 'input' | 'timer') => void;
+  setMode: (m: 'qcm' | 'input') => void;
+  setTimer: (t: number) => void;
   setTotalQ: (q: number) => void;
   initRound: () => void;
-  handleAnswer: (isCorrect: boolean, ans: number) => void;
+  handleAnswer: (isCorrect: boolean, ans: number, elapsed?: number) => void;
   nextQuestion: () => boolean;
   endRound: () => Promise<void>;
   setIsDuel: (v: boolean) => void;
@@ -54,7 +56,8 @@ export function useGame(): GameContextType {
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
   const [selectedTables, setSelectedTables] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  const [selectedMode, setSelectedMode] = useState<'qcm' | 'input' | 'timer'>('qcm');
+  const [selectedMode, setSelectedMode] = useState<'qcm' | 'input'>('qcm');
+  const [selectedTimer, setSelectedTimer] = useState<number>(0);
   const [totalQ, setTotalQ] = useState(20);
   const [isDuel, setIsDuel] = useState(false);
   const [duelPlayerIdx, setDuelPlayerIdx] = useState(0);
@@ -76,7 +79,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     loadConfig().then((config) => {
       if (config) {
         setSelectedTables(config.selectedTables);
-        setSelectedMode(config.selectedMode);
+        const rawMode = config.selectedMode as string;
+        const mode: 'qcm' | 'input' = rawMode === 'input' ? 'input' : 'qcm';
+        setSelectedMode(mode);
+        setSelectedTimer(config.selectedTimer ?? 0);
         setTotalQ(config.totalQ);
       }
     });
@@ -84,8 +90,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   // Persist config when it changes
   useEffect(() => {
-    saveConfig({ selectedTables, selectedMode, totalQ });
-  }, [selectedTables, selectedMode, totalQ]);
+    saveConfig({ selectedTables, selectedMode, selectedTimer, totalQ });
+  }, [selectedTables, selectedMode, selectedTimer, totalQ]);
 
   const scoreRef = useRef(0);
   const correctRef = useRef(0);
@@ -103,8 +109,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  const setMode = useCallback((m: 'qcm' | 'input' | 'timer') => {
+  const setMode = useCallback((m: 'qcm' | 'input') => {
     setSelectedMode(m);
+  }, []);
+
+  const setTimer = useCallback((t: number) => {
+    setSelectedTimer(t);
   }, []);
 
   const initRound = useCallback(() => {
@@ -129,11 +139,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     }
   }, [selectedTables, totalQ]);
 
-  const handleAnswer = useCallback((isCorrect: boolean, ans: number) => {
+  const handleAnswer = useCallback((isCorrect: boolean, ans: number, elapsed?: number) => {
     setAnswered(true);
     if (isCorrect) {
       const newStreak = streakRef.current + 1;
-      const newScore = computeScore(scoreRef.current, streakRef.current);
+      const newScore = computeScore(scoreRef.current, streakRef.current, elapsed ?? 0);
       const newCorrect = correctRef.current + 1;
       const newMaxStreak = Math.max(maxStreakRef.current, newStreak);
       scoreRef.current = newScore;
@@ -186,6 +196,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setDuelResults((prev) => [...prev, result]);
     } else {
       const rd = getResultData(correctRef.current, totalQ);
+      const modeLabel = selectedTimer > 0 ? `${selectedMode}+${selectedTimer}s` : selectedMode;
       const entry: SoloHistoryEntry = {
         date: new Date().toISOString(),
         type: 'solo',
@@ -194,14 +205,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         wrong: wrongRef.current,
         maxStreak: maxStreakRef.current,
         totalQ,
-        mode: selectedMode,
+        mode: modeLabel,
         tables: [...selectedTables].sort((a, b) => a - b),
         emoji: rd.emoji,
         stars: rd.stars,
       };
       await saveGame(entry);
     }
-  }, [isDuel, totalQ, selectedMode, selectedTables]);
+  }, [isDuel, totalQ, selectedMode, selectedTimer, selectedTables]);
 
   const resetDuel = useCallback(() => {
     setDuelResults([]);
@@ -213,10 +224,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   return (
     <GameContext.Provider
       value={{
-        selectedTables, selectedMode, totalQ, isDuel, duelPlayerIdx, duelResults,
+        selectedTables, selectedMode, selectedTimer, totalQ, isDuel, duelPlayerIdx, duelResults,
         questions, qi, score, correct, wrong, streak, maxStreak, answered,
         feedback, feedbackType, choices, currentQuestion,
-        toggleTable, setMode, setTotalQ, initRound, handleAnswer, nextQuestion,
+        toggleTable, setMode, setTimer, setTotalQ, initRound, handleAnswer, nextQuestion,
         endRound, setIsDuel, setDuelPlayerIdx, resetDuel,
       }}
     >

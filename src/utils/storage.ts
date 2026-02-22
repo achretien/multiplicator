@@ -6,7 +6,8 @@ const MAX_ENTRIES = 50;
 
 export interface GameConfig {
   selectedTables: number[];
-  selectedMode: 'qcm' | 'input' | 'timer';
+  selectedMode: 'qcm' | 'input';
+  selectedTimer: number;
   totalQ: number;
 }
 

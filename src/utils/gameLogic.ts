@@ -46,8 +46,11 @@ export function genChoices(ans: number): number[] {
   return shuffle([...s]);
 }
 
-export function computeScore(currentScore: number, streak: number): number {
-  return currentScore + Math.max(10, 10 + streak * 2);
+export function computeScore(currentScore: number, streak: number, elapsed: number): number {
+  if (elapsed >= 10) return currentScore;
+  const base = Math.max(10, 10 + streak * 2);
+  const multiplier = (10 - elapsed) / 10;
+  return currentScore + Math.round(base * multiplier);
 }
 
 import { getStrings } from '../constants/strings';

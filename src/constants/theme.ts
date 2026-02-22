@@ -53,5 +53,5 @@ export const PLAYERS = [
 export const MODE_LABELS: Record<string, string> = {
   qcm: getStrings().modeQcm,
   input: getStrings().modeInput,
-  timer: getStrings().modeTimer,
+  timer: 'Chrono', // kept for backward compatibility with old history entries
 };

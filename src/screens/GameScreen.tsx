@@ -20,7 +20,7 @@ export default function GameScreen() {
   const nav = useNavigation<NavProp>();
   const game = useGame();
   const {
-    qi, totalQ, score, streak, selectedMode, isDuel, duelPlayerIdx,
+    qi, totalQ, score, streak, selectedMode, selectedTimer, isDuel, duelPlayerIdx,
     currentQuestion, answered, feedback, feedbackType, choices,
     handleAnswer, nextQuestion, endRound,
     setDuelPlayerIdx,
@@ -29,10 +29,11 @@ export default function GameScreen() {
   const [choiceStatuses, setChoiceStatuses] = useState<Record<number, 'default' | 'correct' | 'wrong'>>({});
   const [inputValue, setInputValue] = useState('');
   const [inputStatus, setInputStatus] = useState<'' | 'correct' | 'wrong'>('');
-  const [timerLeft, setTimerLeft] = useState(10);
+  const [timerLeft, setTimerLeft] = useState(selectedTimer || 10);
   const [showQuit, setShowQuit] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const answeredRef = useRef(false);
+  const questionStartRef = useRef<number>(Date.now());
   const [choiceKey, setChoiceKey] = useState(0);
 
   const clearTimer = useCallback(() => {
@@ -71,14 +72,15 @@ export default function GameScreen() {
     setChoiceStatuses({}); // eslint-disable-line react-hooks/set-state-in-effect
     setInputValue('');
     setInputStatus('');
-    setTimerLeft(10);
+    setTimerLeft(selectedTimer || 10);
     answeredRef.current = false;
+    questionStartRef.current = Date.now();
     setChoiceKey((k) => k + 1);
 
-    if (selectedMode === 'timer' && currentQuestion) {
+    if (selectedTimer > 0 && currentQuestion) {
       clearTimer();
-      let left = 10;
-      setTimerLeft(10);
+      let left = selectedTimer;
+      setTimerLeft(selectedTimer);
       timerRef.current = setInterval(() => {
         left -= 0.1;
         if (left <= 0) {
@@ -89,6 +91,7 @@ export default function GameScreen() {
             answeredRef.current = true;
             handleAnswer(false, currentQuestion.ans);
             setChoiceStatuses((prev) => ({ ...prev, [currentQuestion.ans]: 'correct' }));
+            setInputStatus('wrong');
             setTimeout(() => advanceRef.current(), 1800);
           }
         } else {
@@ -104,6 +107,7 @@ export default function GameScreen() {
     if (answeredRef.current || !currentQuestion) return;
     answeredRef.current = true;
     clearTimer();
+    const elapsed = (Date.now() - questionStartRef.current) / 1000;
     const ans = currentQuestion.ans;
     const isCorrect = val === ans;
 
@@ -115,7 +119,7 @@ export default function GameScreen() {
       newStatuses[ans] = 'correct';
     }
     setChoiceStatuses(newStatuses);
-    handleAnswer(isCorrect, ans);
+    handleAnswer(isCorrect, ans, elapsed);
     setTimeout(() => advanceRef.current(), 1400);
   }, [currentQuestion, handleAnswer, clearTimer]);
 
@@ -135,12 +139,14 @@ export default function GameScreen() {
     const val = parseInt(inputValue);
     if (isNaN(val)) return;
     answeredRef.current = true;
+    clearTimer();
+    const elapsed = (Date.now() - questionStartRef.current) / 1000;
     const ans = currentQuestion.ans;
     const isCorrect = val === ans;
     setInputStatus(isCorrect ? 'correct' : 'wrong');
-    handleAnswer(isCorrect, ans);
+    handleAnswer(isCorrect, ans, elapsed);
     setTimeout(() => advanceRef.current(), 1400);
-  }, [inputValue, currentQuestion, handleAnswer]);
+  }, [inputValue, currentQuestion, handleAnswer, clearTimer]);
 
   const playerBadge = isDuel
     ? { emoji: PLAYERS[duelPlayerIdx].emoji, name: PLAYERS[duelPlayerIdx].name, color: PLAYERS[duelPlayerIdx].color }
@@ -178,11 +184,11 @@ export default function GameScreen() {
             {' = ?'}
           </Text>
 
-          {selectedMode === 'timer' && (
-            <TimerBar timeLeft={timerLeft} totalTime={10} />
+          {selectedTimer > 0 && (
+            <TimerBar timeLeft={timerLeft} totalTime={selectedTimer} />
           )}
 
-          {(selectedMode === 'qcm' || selectedMode === 'timer') && (
+          {selectedMode === 'qcm' && (
             <View style={styles.choicesGrid}>
               {choices.map((c) => (
                 <ChoiceButton

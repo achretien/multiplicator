@@ -19,9 +19,10 @@ function getModes() {
   return [
     { key: 'qcm' as const, icon: '\u{1F518}', name: s.modeQcm },
     { key: 'input' as const, icon: '\u270F\uFE0F', name: s.modeInput },
-    { key: 'timer' as const, icon: '\u23F1\uFE0F', name: s.modeTimer },
   ];
 }
+
+const TIMER_VALUES = [0, 10, 5, 2] as const;
 
 const QUESTION_COUNTS = [
   { value: 10, icon: '\u{1F3AF}' },
@@ -31,7 +32,7 @@ const QUESTION_COUNTS = [
 
 export default function MenuScreen() {
   const nav = useNavigation<NavProp>();
-  const { selectedTables, selectedMode, totalQ, toggleTable, setMode, setTotalQ, setIsDuel, resetDuel, initRound } = useGame();
+  const { selectedTables, selectedMode, selectedTimer, totalQ, toggleTable, setMode, setTimer, setTotalQ, setIsDuel, resetDuel, initRound } = useGame();
   const s = getStrings();
   const MODES = getModes();
 
@@ -79,6 +80,22 @@ export default function MenuScreen() {
               selected={selectedMode === m.key}
               onPress={() => setMode(m.key)}
             />
+          ))}
+        </View>
+
+        <Text style={styles.label}>{s.timerLabel}</Text>
+        <View style={[styles.timerRow, { marginBottom: 20 }]}>
+          {TIMER_VALUES.map((val, idx) => (
+            <TouchableOpacity
+              key={val}
+              style={[styles.timerChip, selectedTimer === val && styles.timerChipSelected]}
+              onPress={() => setTimer(val)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.timerChipText, selectedTimer === val && styles.timerChipTextSelected]}>
+                {s.timerOptions[idx]}
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
 
@@ -171,6 +188,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     marginBottom: 20,
+  },
+  timerRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  timerChip: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: BorderRadius.sm,
+    alignItems: 'center',
+    backgroundColor: '#f0f0f8',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  timerChipSelected: {
+    backgroundColor: '#ede9ff',
+    borderColor: Colors.primary,
+  },
+  timerChipText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Colors.muted,
+  },
+  timerChipTextSelected: {
+    color: Colors.primary,
   },
   btnStart: {
     width: '100%',
