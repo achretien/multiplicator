@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { Question, genQuestions, genChoices, computeScore, getRandomCorrectMessage, getResultData } from '../utils/gameLogic';
-import { saveGame, loadConfig, saveConfig, SoloHistoryEntry, QuestionResult } from '../utils/storage';
+import { saveGame, loadConfig, saveConfig, SoloHistoryEntry, HistoryEntry, QuestionResult } from '../utils/storage';
 import { getStrings } from '../constants/strings';
 
 export interface DuelPlayerResult {
@@ -30,6 +30,7 @@ interface GameState {
   feedback: string;
   feedbackType: 'correct' | 'wrong' | '';
   choices: number[];
+  lastEntry: HistoryEntry | null;
 }
 
 interface GameContextType extends GameState {
@@ -74,6 +75,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [feedback, setFeedback] = useState('');
   const [feedbackType, setFeedbackType] = useState<'correct' | 'wrong' | ''>('');
   const [choices, setChoices] = useState<number[]>([]);
+  const [lastEntry, setLastEntry] = useState<HistoryEntry | null>(null);
 
   // Load saved config on mount
   useEffect(() => {
@@ -229,6 +231,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         stars: rd.stars,
         questions: [...questionResultsRef.current],
       };
+      setLastEntry(entry);
       await saveGame(entry);
     }
   }, [isDuel, totalQ, selectedMode, selectedTimer, selectedTables]);
@@ -245,7 +248,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       value={{
         selectedTables, selectedMode, selectedTimer, totalQ, isDuel, duelPlayerIdx, duelResults,
         questions, qi, score, correct, wrong, streak, maxStreak, answered,
-        feedback, feedbackType, choices, currentQuestion,
+        feedback, feedbackType, choices, currentQuestion, lastEntry,
         toggleTable, setMode, setTimer, setTotalQ, initRound, handleAnswer, nextQuestion,
         endRound, setIsDuel, setDuelPlayerIdx, resetDuel,
       }}

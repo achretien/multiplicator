@@ -15,7 +15,7 @@ type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function ResultScreen() {
   const nav = useNavigation<NavProp>();
-  const { score, correct, wrong, maxStreak, totalQ, initRound, setIsDuel, resetDuel } = useGame();
+  const { score, correct, wrong, maxStreak, totalQ, initRound, setIsDuel, resetDuel, lastEntry } = useGame();
 
   const { emoji, title, sub, stars } = getResultData(correct, totalQ);
   const s = getStrings();
@@ -63,6 +63,16 @@ export default function ResultScreen() {
             <Text style={styles.btnStartText}>{s.replay}</Text>
           </LinearGradient>
         </TouchableOpacity>
+
+        {lastEntry && (
+          <TouchableOpacity
+            style={[styles.btnSecondary, { marginBottom: 10 }]}
+            onPress={() => nav.navigate('GameDetail', { entry: lastEntry })}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.btnSecondaryText}>{s.detailButton}</Text>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.popToTop()} activeOpacity={0.7}>
           <Text style={styles.btnSecondaryText}>{s.menu}</Text>

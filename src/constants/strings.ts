@@ -95,6 +95,7 @@ export function getStrings() {
     historyDraw: '\u00C9galit\u00E9 \u{1F91D}',
 
     // Game detail
+    detailButton: '\u{1F4CB} Voir le d\u00E9tail',
     gameDetailTitle: '\u{1F4CB} R\u00E9capitulatif',
     gameDetailTimeout: '\u23F1\uFE0F',
     gameDetailNoData: 'D\u00E9tails non disponibles\n(partie jou\u00E9e avec une ancienne version)',
