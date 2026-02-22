@@ -54,7 +54,9 @@ export default function HistoryScreen() {
         ) : (
           <>
             {history.map((e, i) => (
-              <HistoryEntryRow key={i} entry={e} />
+              <TouchableOpacity key={i} onPress={() => nav.navigate('GameDetail', { entry: e })} activeOpacity={0.7}>
+                <HistoryEntryRow entry={e} />
+              </TouchableOpacity>
             ))}
             <TouchableOpacity style={styles.btnClear} onPress={handleClear} activeOpacity={0.7}>
               <Text style={styles.btnClearText}>{s.historyClear}</Text>

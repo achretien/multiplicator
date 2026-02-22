@@ -89,7 +89,7 @@ export default function GameScreen() {
           clearTimer();
           if (!answeredRef.current) {
             answeredRef.current = true;
-            handleAnswer(false, currentQuestion.ans);
+            handleAnswer(false, currentQuestion.ans, selectedTimer, -1);
             setChoiceStatuses((prev) => ({ ...prev, [currentQuestion.ans]: 'correct' }));
             setInputStatus('wrong');
             setTimeout(() => advanceRef.current(), 1800);
@@ -119,7 +119,7 @@ export default function GameScreen() {
       newStatuses[ans] = 'correct';
     }
     setChoiceStatuses(newStatuses);
-    handleAnswer(isCorrect, ans, elapsed);
+    handleAnswer(isCorrect, ans, elapsed, val);
     setTimeout(() => advanceRef.current(), 1400);
   }, [currentQuestion, handleAnswer, clearTimer]);
 
@@ -144,7 +144,7 @@ export default function GameScreen() {
     const ans = currentQuestion.ans;
     const isCorrect = val === ans;
     setInputStatus(isCorrect ? 'correct' : 'wrong');
-    handleAnswer(isCorrect, ans, elapsed);
+    handleAnswer(isCorrect, ans, elapsed, val);
     setTimeout(() => advanceRef.current(), 1400);
   }, [inputValue, currentQuestion, handleAnswer, clearTimer]);
 

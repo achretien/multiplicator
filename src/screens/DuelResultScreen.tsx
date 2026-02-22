@@ -31,8 +31,8 @@ export default function DuelResultScreen() {
         mode: selectedMode,
         tables: [...selectedTables].sort((a, b) => a - b),
         winner: draw ? 'draw' : (childWins ? 'child' : 'parent'),
-        child: { score: child.score, correct: child.correct, wrong: child.wrong },
-        parent: { score: parent.score, correct: parent.correct, wrong: parent.wrong },
+        child: { score: child.score, correct: child.correct, wrong: child.wrong, questions: child.questions },
+        parent: { score: parent.score, correct: parent.correct, wrong: parent.wrong, questions: parent.questions },
         emoji: draw ? '\u{1F91D}' : '\u{1F3C6}',
         stars: draw ? 2 : 3,
       };

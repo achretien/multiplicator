@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { Question, genQuestions, genChoices, computeScore, getRandomCorrectMessage, getResultData } from '../utils/gameLogic';
-import { saveGame, loadConfig, saveConfig, SoloHistoryEntry } from '../utils/storage';
+import { saveGame, loadConfig, saveConfig, SoloHistoryEntry, QuestionResult } from '../utils/storage';
 import { getStrings } from '../constants/strings';
 
 export interface DuelPlayerResult {
@@ -8,6 +8,7 @@ export interface DuelPlayerResult {
   correct: number;
   wrong: number;
   maxStreak: number;
+  questions: QuestionResult[];
 }
 
 interface GameState {
@@ -37,7 +38,7 @@ interface GameContextType extends GameState {
   setTimer: (t: number) => void;
   setTotalQ: (q: number) => void;
   initRound: () => void;
-  handleAnswer: (isCorrect: boolean, ans: number, elapsed?: number) => void;
+  handleAnswer: (isCorrect: boolean, ans: number, elapsed?: number, given?: number) => void;
   nextQuestion: () => boolean;
   endRound: () => Promise<void>;
   setIsDuel: (v: boolean) => void;
@@ -98,6 +99,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const wrongRef = useRef(0);
   const streakRef = useRef(0);
   const maxStreakRef = useRef(0);
+  const questionsRef = useRef<Question[]>([]);
+  const qiRef = useRef(0);
+  const questionResultsRef = useRef<QuestionResult[]>([]);
 
   const toggleTable = useCallback((t: number) => {
     setSelectedTables((prev) => {
@@ -134,12 +138,24 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     wrongRef.current = 0;
     streakRef.current = 0;
     maxStreakRef.current = 0;
+    questionsRef.current = qs;
+    qiRef.current = 0;
+    questionResultsRef.current = [];
     if (qs.length > 0) {
       setChoices(genChoices(qs[0].ans));
     }
   }, [selectedTables, totalQ]);
 
-  const handleAnswer = useCallback((isCorrect: boolean, ans: number, elapsed?: number) => {
+  const handleAnswer = useCallback((isCorrect: boolean, ans: number, elapsed?: number, given?: number) => {
+    const q = questionsRef.current[qiRef.current];
+    if (q) {
+      questionResultsRef.current = [...questionResultsRef.current, {
+        a: q.a, b: q.b, ans,
+        given: given ?? -1,
+        elapsed: elapsed ?? 0,
+        correct: isCorrect,
+      }];
+    }
     setAnswered(true);
     if (isCorrect) {
       const newStreak = streakRef.current + 1;
@@ -172,6 +188,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     if (nextIdx >= totalQ) {
       return false;
     }
+    qiRef.current = nextIdx;
     setQi(nextIdx);
     setAnswered(false);
     setFeedback('');
@@ -192,6 +209,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         correct: correctRef.current,
         wrong: wrongRef.current,
         maxStreak: maxStreakRef.current,
+        questions: [...questionResultsRef.current],
       };
       setDuelResults((prev) => [...prev, result]);
     } else {
@@ -209,6 +227,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         tables: [...selectedTables].sort((a, b) => a - b),
         emoji: rd.emoji,
         stars: rd.stars,
+        questions: [...questionResultsRef.current],
       };
       await saveGame(entry);
     }

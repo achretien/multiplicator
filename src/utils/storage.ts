@@ -4,6 +4,15 @@ const HISTORY_KEY = 'tables-history';
 const CONFIG_KEY = 'tables-config';
 const MAX_ENTRIES = 50;
 
+export interface QuestionResult {
+  a: number;
+  b: number;
+  ans: number;     // bonne réponse
+  given: number;   // réponse donnée (-1 = timeout)
+  elapsed: number; // secondes
+  correct: boolean;
+}
+
 export interface GameConfig {
   selectedTables: number[];
   selectedMode: 'qcm' | 'input';
@@ -40,6 +49,7 @@ export interface SoloHistoryEntry {
   tables: number[];
   emoji: string;
   stars: number;
+  questions?: QuestionResult[];
 }
 
 export interface DuelHistoryEntry {
@@ -49,8 +59,8 @@ export interface DuelHistoryEntry {
   mode: string;
   tables: number[];
   winner: 'child' | 'parent' | 'draw';
-  child: { score: number; correct: number; wrong: number };
-  parent: { score: number; correct: number; wrong: number };
+  child: { score: number; correct: number; wrong: number; questions?: QuestionResult[] };
+  parent: { score: number; correct: number; wrong: number; questions?: QuestionResult[] };
   emoji: string;
   stars: number;
 }

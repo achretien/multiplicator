@@ -94,6 +94,11 @@ export function getStrings() {
     historyParentWins: '\u{1F468} Parent gagne \u{1F3C6}',
     historyDraw: '\u00C9galit\u00E9 \u{1F91D}',
 
+    // Game detail
+    gameDetailTitle: '\u{1F4CB} R\u00E9capitulatif',
+    gameDetailTimeout: '\u23F1\uFE0F',
+    gameDetailNoData: 'D\u00E9tails non disponibles\n(partie jou\u00E9e avec une ancienne version)',
+
     // Date formatting
     dateLocale: 'fr-FR',
     dateTimeSeparator: ' \u00E0 ',

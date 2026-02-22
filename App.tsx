@@ -10,6 +10,8 @@ import GameScreen from './src/screens/GameScreen';
 import ResultScreen from './src/screens/ResultScreen';
 import DuelResultScreen from './src/screens/DuelResultScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
+import GameDetailScreen from './src/screens/GameDetailScreen';
+import { HistoryEntry } from './src/utils/storage';
 
 export type RootStackParamList = {
   Menu: undefined;
@@ -18,6 +20,7 @@ export type RootStackParamList = {
   Result: undefined;
   DuelResult: undefined;
   History: undefined;
+  GameDetail: { entry: HistoryEntry };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -40,6 +43,7 @@ export default function App() {
           <Stack.Screen name="Result" component={ResultScreen} />
           <Stack.Screen name="DuelResult" component={DuelResultScreen} />
           <Stack.Screen name="History" component={HistoryScreen} />
+          <Stack.Screen name="GameDetail" component={GameDetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>
       <StatusBar style="dark" />
