@@ -1,0 +1,26 @@
+{
+  "name": "Multiplicator",
+  "short_name": "Multiplicator",
+  "description": "Jeu de tables de multiplication",
+  "lang": "fr",
+  "start_url": "/multiplicator/",
+  "scope": "/multiplicator/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#6c63ff",
+  "background_color": "#f0f4ff",
+  "icons": [
+    {
+      "src": "/multiplicator/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/multiplicator/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
