@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
+import { Colors, BorderRadius, Spacing, PLAYERS, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 import { useGame } from '../context/GameContext';
 import { saveGame, DuelHistoryEntry } from '../utils/storage';
@@ -44,6 +44,7 @@ export default function DuelResultScreen() {
   if (!child || !parent) return null;
 
   const s = getStrings();
+  const colors = useColors();
   const childWins = child.score > parent.score;
   const draw = child.score === parent.score;
   const winner = draw ? null : (childWins ? PLAYERS[0] : PLAYERS[1]);
@@ -60,8 +61,8 @@ export default function DuelResultScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.card}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.bg }]} showsVerticalScrollIndicator={false}>
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
         <AppHeader compact />
         <LinearGradient
           colors={bannerColors}
@@ -113,16 +114,16 @@ export default function DuelResultScreen() {
 
         {lastEntry && (
           <TouchableOpacity
-            style={[styles.btnSecondary, { marginBottom: 10 }]}
+            style={[styles.btnSecondary, { marginBottom: 10, backgroundColor: colors.btnSecondary }]}
             onPress={() => nav.navigate('GameDetail', { entry: lastEntry })}
             activeOpacity={0.7}
           >
-            <Text style={styles.btnSecondaryText}>{s.detailButton}</Text>
+            <Text style={[styles.btnSecondaryText, { color: colors.text }]}>{s.detailButton}</Text>
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.popToTop()} activeOpacity={0.7}>
-          <Text style={styles.btnSecondaryText}>{s.menu}</Text>
+        <TouchableOpacity style={[styles.btnSecondary, { backgroundColor: colors.btnSecondary }]} onPress={() => nav.popToTop()} activeOpacity={0.7}>
+          <Text style={[styles.btnSecondaryText, { color: colors.text }]}>{s.menu}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

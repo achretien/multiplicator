@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Colors, BorderRadius } from '../constants/theme';
+import { Colors, BorderRadius, useColors } from '../constants/theme';
 
 interface Props {
   icon: string;
@@ -10,14 +10,19 @@ interface Props {
 }
 
 export default function ModeCard({ icon, name, selected, onPress }: Props) {
+  const colors = useColors();
   return (
     <TouchableOpacity
-      style={[styles.card, selected && styles.selected]}
+      style={[
+        styles.card,
+        { backgroundColor: colors.card, borderColor: colors.border },
+        selected && { borderColor: colors.primary, backgroundColor: colors.surfaceSelected },
+      ]}
       onPress={onPress}
       activeOpacity={0.7}
     >
       <Text style={styles.icon}>{icon}</Text>
-      <Text style={styles.name}>{name}</Text>
+      <Text style={[styles.name, { color: colors.text }]}>{name}</Text>
     </TouchableOpacity>
   );
 }

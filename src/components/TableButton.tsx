@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Colors, BorderRadius } from '../constants/theme';
+import { Colors, BorderRadius, useColors } from '../constants/theme';
 
 interface Props {
   value: number;
@@ -9,13 +9,18 @@ interface Props {
 }
 
 export default function TableButton({ value, selected, onPress }: Props) {
+  const colors = useColors();
   return (
     <TouchableOpacity
-      style={[styles.btn, selected && styles.selected]}
+      style={[
+        styles.btn,
+        { backgroundColor: colors.card, borderColor: colors.border },
+        selected && { borderColor: colors.primary, backgroundColor: colors.surfaceSelected },
+      ]}
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <Text style={[styles.text, selected && styles.selectedText]}>{value}</Text>
+      <Text style={[styles.text, { color: selected ? colors.primary : colors.text }]}>{value}</Text>
     </TouchableOpacity>
   );
 }

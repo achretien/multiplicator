@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Colors, BorderRadius } from '../constants/theme';
+import { Colors, BorderRadius, useColors } from '../constants/theme';
 
 interface Props {
   onPress: (digit: string) => void;
@@ -8,6 +8,7 @@ interface Props {
 }
 
 export default function Numpad({ onPress, onDelete }: Props) {
+  const colors = useColors();
   const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
   return (
@@ -15,22 +16,22 @@ export default function Numpad({ onPress, onDelete }: Props) {
       {digits.map((d) => (
         <TouchableOpacity
           key={d}
-          style={styles.btn}
+          style={[styles.btn, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => onPress(d)}
           activeOpacity={0.6}
         >
-          <Text style={styles.text}>{d}</Text>
+          <Text style={[styles.text, { color: colors.text }]}>{d}</Text>
         </TouchableOpacity>
       ))}
       <TouchableOpacity
-        style={[styles.btn, styles.zero]}
+        style={[styles.btn, styles.zero, { backgroundColor: colors.card, borderColor: colors.border }]}
         onPress={() => onPress('0')}
         activeOpacity={0.6}
       >
-        <Text style={styles.text}>0</Text>
+        <Text style={[styles.text, { color: colors.text }]}>0</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.btn, styles.del]}
+        style={[styles.btn, styles.del, { backgroundColor: colors.dangerSurface }]}
         onPress={onDelete}
         activeOpacity={0.6}
       >

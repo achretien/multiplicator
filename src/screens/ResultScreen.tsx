@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Colors, BorderRadius, Spacing } from '../constants/theme';
+import { Colors, BorderRadius, Spacing, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 import { useGame } from '../context/GameContext';
 import { getResultData } from '../utils/gameLogic';
@@ -19,6 +19,7 @@ export default function ResultScreen() {
 
   const { emoji, title, sub, stars } = getResultData(correct, totalQ);
   const s = getStrings();
+  const colors = useColors();
 
   const replay = () => {
     setIsDuel(false);
@@ -28,28 +29,28 @@ export default function ResultScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.card}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.bg }]} showsVerticalScrollIndicator={false}>
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
         <AppHeader compact />
         <Text style={styles.emoji}>{emoji}</Text>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.sub}>{sub}</Text>
-        <Text style={styles.scoreBig}>{score}</Text>
-        <Text style={styles.scoreLabel}>{s.points}</Text>
+        <Text style={[styles.title, { color: colors.primary }]}>{title}</Text>
+        <Text style={[styles.sub, { color: colors.muted }]}>{sub}</Text>
+        <Text style={[styles.scoreBig, { color: colors.primary }]}>{score}</Text>
+        <Text style={[styles.scoreLabel, { color: colors.lightMuted }]}>{s.points}</Text>
         <StarsRow stars={stars} />
 
         <View style={styles.statsRow}>
           <View style={styles.stat}>
             <Text style={[styles.statVal, { color: Colors.success }]}>{correct}</Text>
-            <Text style={styles.statLbl}>{s.correctLabel}</Text>
+            <Text style={[styles.statLbl, { color: colors.muted }]}>{s.correctLabel}</Text>
           </View>
           <View style={styles.stat}>
             <Text style={[styles.statVal, { color: Colors.secondary }]}>{wrong}</Text>
-            <Text style={styles.statLbl}>{s.errorsLabel}</Text>
+            <Text style={[styles.statLbl, { color: colors.muted }]}>{s.errorsLabel}</Text>
           </View>
           <View style={styles.stat}>
             <Text style={[styles.statVal, { color: Colors.warn }]}>{maxStreak}</Text>
-            <Text style={styles.statLbl}>{s.maxStreakLabel}</Text>
+            <Text style={[styles.statLbl, { color: colors.muted }]}>{s.maxStreakLabel}</Text>
           </View>
         </View>
 
@@ -66,16 +67,16 @@ export default function ResultScreen() {
 
         {lastEntry && (
           <TouchableOpacity
-            style={[styles.btnSecondary, { marginBottom: 10 }]}
+            style={[styles.btnSecondary, { marginBottom: 10, backgroundColor: colors.btnSecondary }]}
             onPress={() => nav.navigate('GameDetail', { entry: lastEntry })}
             activeOpacity={0.7}
           >
-            <Text style={styles.btnSecondaryText}>{s.detailButton}</Text>
+            <Text style={[styles.btnSecondaryText, { color: colors.text }]}>{s.detailButton}</Text>
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.popToTop()} activeOpacity={0.7}>
-          <Text style={styles.btnSecondaryText}>{s.menu}</Text>
+        <TouchableOpacity style={[styles.btnSecondary, { backgroundColor: colors.btnSecondary }]} onPress={() => nav.popToTop()} activeOpacity={0.7}>
+          <Text style={[styles.btnSecondaryText, { color: colors.text }]}>{s.menu}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

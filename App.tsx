@@ -46,7 +46,7 @@ export default function App() {
           <Stack.Screen name="GameDetail" component={GameDetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-      <StatusBar style="dark" />
+      <StatusBar style="auto" />
     </GameProvider>
   );
 }

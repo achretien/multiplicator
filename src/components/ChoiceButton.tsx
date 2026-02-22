@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Animated } from 'react-native';
-import { Colors, BorderRadius } from '../constants/theme';
+import { Colors, BorderRadius, useColors } from '../constants/theme';
 
 interface Props {
   value: number;
@@ -10,6 +10,7 @@ interface Props {
 }
 
 export default function ChoiceButton({ value, status, disabled, onPress }: Props) {
+  const colors = useColors();
   const scale = useMemo(() => new Animated.Value(0.8), []);
   const opacity = useMemo(() => new Animated.Value(0), []);
 
@@ -29,14 +30,14 @@ export default function ChoiceButton({ value, status, disabled, onPress }: Props
   const bgColor =
     status === 'correct' ? Colors.success :
     status === 'wrong' ? Colors.secondary :
-    'white';
+    colors.card;
 
   const borderColor =
     status === 'correct' ? Colors.success :
     status === 'wrong' ? Colors.secondary :
-    Colors.border;
+    colors.border;
 
-  const textColor = status !== 'default' ? 'white' : Colors.text;
+  const textColor = status !== 'default' ? 'white' : colors.text;
 
   return (
     <Animated.View style={{ transform: [{ scale }], opacity, width: '48%' }}>

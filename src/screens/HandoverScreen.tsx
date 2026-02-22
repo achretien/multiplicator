@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
+import { Colors, BorderRadius, Spacing, PLAYERS, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 import AppHeader from '../components/AppHeader';
 import { useGame } from '../context/GameContext';
@@ -16,6 +16,7 @@ export default function HandoverScreen() {
   const { duelPlayerIdx, initRound } = useGame();
 
   const s = getStrings();
+  const colors = useColors();
   const player = PLAYERS[duelPlayerIdx];
   const subText = duelPlayerIdx === 0
     ? s.handoverYourTurn
@@ -29,12 +30,12 @@ export default function HandoverScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
         <AppHeader compact />
         <Text style={styles.emoji}>{player.emoji}</Text>
-        <Text style={styles.name}>{player.name}</Text>
-        <Text style={styles.sub}>{subText}</Text>
+        <Text style={[styles.name, { color: colors.text }]}>{player.name}</Text>
+        <Text style={[styles.sub, { color: colors.muted }]}>{subText}</Text>
         <TouchableOpacity onPress={beginTurn} activeOpacity={0.8}>
           <LinearGradient
             colors={[player.color, gradientEnd]}

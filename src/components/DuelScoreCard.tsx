@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants/theme';
+import { Colors, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 
 interface Props {
@@ -16,24 +16,29 @@ interface Props {
 
 export default function DuelScoreCard({ emoji, name, score, correct, wrong, maxStreak, color, isWinner }: Props) {
   const s = getStrings();
+  const colors = useColors();
   return (
-    <View style={[styles.card, isWinner && styles.winnerCard]}>
+    <View style={[
+      styles.card,
+      { backgroundColor: colors.card, borderColor: colors.border },
+      isWinner && { borderColor: Colors.warn, backgroundColor: colors.winnerBg },
+    ]}>
       <Text style={styles.emoji}>{emoji}</Text>
-      <Text style={styles.name}>{name}{isWinner ? ' \u{1F3C6}' : ''}</Text>
+      <Text style={[styles.name, { color: colors.muted }]}>{name}{isWinner ? ' \u{1F3C6}' : ''}</Text>
       <Text style={[styles.score, { color }]}>{score}</Text>
-      <Text style={styles.pts}>{s.pts}</Text>
+      <Text style={[styles.pts, { color: colors.lightMuted }]}>{s.pts}</Text>
       <View style={styles.statsRow}>
         <View style={styles.stat}>
           <Text style={[styles.statVal, { color: Colors.success }]}>{correct}</Text>
-          <Text style={styles.statLbl}>{s.correctLabel}</Text>
+          <Text style={[styles.statLbl, { color: colors.muted }]}>{s.correctLabel}</Text>
         </View>
         <View style={styles.stat}>
           <Text style={[styles.statVal, { color: Colors.secondary }]}>{wrong}</Text>
-          <Text style={styles.statLbl}>{s.errorsLabel}</Text>
+          <Text style={[styles.statLbl, { color: colors.muted }]}>{s.errorsLabel}</Text>
         </View>
         <View style={styles.stat}>
           <Text style={[styles.statVal, { color: Colors.warn }]}>{maxStreak}</Text>
-          <Text style={styles.statLbl}>{s.maxStreakLabel}</Text>
+          <Text style={[styles.statLbl, { color: colors.muted }]}>{s.maxStreakLabel}</Text>
         </View>
       </View>
     </View>

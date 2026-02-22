@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Colors, BorderRadius, Spacing } from '../constants/theme';
+import { Colors, BorderRadius, Spacing, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 import { useGame } from '../context/GameContext';
 import AppHeader from '../components/AppHeader';
@@ -35,6 +35,7 @@ export default function MenuScreen() {
   const nav = useNavigation<NavProp>();
   const { selectedTables, selectedMode, selectedTimer, totalQ, toggleTable, setMode, setTimer, setTotalQ, setIsDuel, resetDuel, initRound } = useGame();
   const s = getStrings();
+  const colors = useColors();
   const MODES = getModes();
 
   const startSolo = () => {
@@ -51,13 +52,13 @@ export default function MenuScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={[styles.card, { overflow: 'hidden' }]}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.bg }]} showsVerticalScrollIndicator={false}>
+      <View style={[styles.card, { overflow: 'hidden', backgroundColor: colors.card }]}>
         <GitHubRibbon />
         <AppHeader />
-        <Text style={styles.sub}>{s.appSubtitle}</Text>
+        <Text style={[styles.sub, { color: colors.muted }]}>{s.appSubtitle}</Text>
 
-        <Text style={styles.label}>{s.tablesToReview}</Text>
+        <Text style={[styles.label, { color: colors.muted }]}>{s.tablesToReview}</Text>
         <View style={styles.tableGrid}>
           <View style={styles.tableRow}>
             {[1, 2, 3, 4, 5].map((i) => (
@@ -71,7 +72,7 @@ export default function MenuScreen() {
           </View>
         </View>
 
-        <Text style={styles.label}>{s.gameMode}</Text>
+        <Text style={[styles.label, { color: colors.muted }]}>{s.gameMode}</Text>
         <View style={styles.modeGrid}>
           {MODES.map((m) => (
             <ModeCard
@@ -84,23 +85,31 @@ export default function MenuScreen() {
           ))}
         </View>
 
-        <Text style={styles.label}>{s.timerLabel}</Text>
+        <Text style={[styles.label, { color: colors.muted }]}>{s.timerLabel}</Text>
         <View style={[styles.timerRow, { marginBottom: 20 }]}>
           {TIMER_VALUES.map((val, idx) => (
             <TouchableOpacity
               key={val}
-              style={[styles.timerChip, selectedTimer === val && styles.timerChipSelected]}
+              style={[
+                styles.timerChip,
+                { backgroundColor: colors.surface, borderColor: 'transparent' },
+                selectedTimer === val && { backgroundColor: colors.surfaceSelected, borderColor: colors.primary },
+              ]}
               onPress={() => setTimer(val)}
               activeOpacity={0.7}
             >
-              <Text style={[styles.timerChipText, selectedTimer === val && styles.timerChipTextSelected]}>
+              <Text style={[
+                styles.timerChipText,
+                { color: colors.muted },
+                selectedTimer === val && { color: colors.primary },
+              ]}>
                 {s.timerOptions[idx]}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        <Text style={styles.label}>{s.questionCount}</Text>
+        <Text style={[styles.label, { color: colors.muted }]}>{s.questionCount}</Text>
         <View style={[styles.modeGrid, { marginBottom: 20 }]}>
           {QUESTION_COUNTS.map((q) => (
             <ModeCard
@@ -135,8 +144,8 @@ export default function MenuScreen() {
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.navigate('History')} activeOpacity={0.7}>
-          <Text style={styles.btnSecondaryText}>{s.historyButton}</Text>
+        <TouchableOpacity style={[styles.btnSecondary, { backgroundColor: colors.btnSecondary }]} onPress={() => nav.navigate('History')} activeOpacity={0.7}>
+          <Text style={[styles.btnSecondaryText, { color: colors.text }]}>{s.historyButton}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

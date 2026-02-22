@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
-import { Colors, BorderRadius } from '../constants/theme';
+import { Colors, BorderRadius, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 
 interface Props {
@@ -11,18 +11,19 @@ interface Props {
 
 export default function QuitModal({ visible, onQuit, onContinue }: Props) {
   const s = getStrings();
+  const colors = useColors();
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: colors.card }]}>
           <Text style={styles.emoji}>{'\u{1F3F3}\uFE0F'}</Text>
-          <Text style={styles.title}>{s.quitTitle}</Text>
-          <Text style={styles.sub}>{s.quitSub}</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{s.quitTitle}</Text>
+          <Text style={[styles.sub, { color: colors.muted }]}>{s.quitSub}</Text>
           <TouchableOpacity style={styles.quitBtn} onPress={onQuit} activeOpacity={0.7}>
             <Text style={styles.quitBtnText}>{s.quitConfirm}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.continueBtn} onPress={onContinue} activeOpacity={0.7}>
-            <Text style={styles.continueBtnText}>{s.quitCancel}</Text>
+          <TouchableOpacity style={[styles.continueBtn, { backgroundColor: colors.btnSecondary }]} onPress={onContinue} activeOpacity={0.7}>
+            <Text style={[styles.continueBtnText, { color: colors.text }]}>{s.quitCancel}</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Colors } from '../constants/theme';
+import { Colors, useColors } from '../constants/theme';
 
 interface Props {
   current: number;
@@ -8,10 +8,11 @@ interface Props {
 }
 
 export default function ProgressBar({ current, total }: Props) {
+  const colors = useColors();
   const pct = total > 0 ? (current / total) * 100 : 0;
 
   return (
-    <View style={styles.bar}>
+    <View style={[styles.bar, { backgroundColor: colors.border }]}>
       <View style={[styles.fill, { width: `${pct}%` }]} />
     </View>
   );

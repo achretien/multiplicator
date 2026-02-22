@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { Colors, BorderRadius, Spacing, PLAYERS } from '../constants/theme';
+import { Colors, BorderRadius, Spacing, PLAYERS, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 import { useGame } from '../context/GameContext';
 import HUD from '../components/HUD';
@@ -148,13 +148,14 @@ export default function GameScreen() {
     setTimeout(() => advanceRef.current(), 1400);
   }, [inputValue, currentQuestion, handleAnswer, clearTimer]);
 
+  const colors = useColors();
   const playerBadge = isDuel
     ? { emoji: PLAYERS[duelPlayerIdx].emoji, name: PLAYERS[duelPlayerIdx].name, color: PLAYERS[duelPlayerIdx].color }
     : null;
 
   if (!currentQuestion) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.bg }]}>
         <View style={styles.inner}>
           <AppHeader compact />
         </View>
@@ -163,7 +164,7 @@ export default function GameScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.bg }]} showsVerticalScrollIndicator={false}>
       <View style={styles.inner}>
         <AppHeader compact />
         <HUD
@@ -175,9 +176,9 @@ export default function GameScreen() {
         />
         <ProgressBar current={qi} total={totalQ} />
 
-        <View style={styles.card}>
-          <Text style={styles.qLabel}>{getStrings().questionLabel(qi + 1)}</Text>
-          <Text style={styles.question}>
+        <View style={[styles.card, { backgroundColor: colors.card }]}>
+          <Text style={[styles.qLabel, { color: colors.muted }]}>{getStrings().questionLabel(qi + 1)}</Text>
+          <Text style={[styles.question, { color: colors.text }]}>
             <Text style={styles.highlight}>{currentQuestion.a}</Text>
             {' \u00D7 '}
             <Text style={styles.highlight}>{currentQuestion.b}</Text>
@@ -206,10 +207,11 @@ export default function GameScreen() {
             <View style={styles.inputWrap}>
               <View style={[
                 styles.inputField,
+                { backgroundColor: colors.card, borderColor: colors.border },
                 inputStatus === 'correct' && styles.inputCorrect,
                 inputStatus === 'wrong' && styles.inputWrong,
               ]}>
-                <Text style={styles.inputText}>{inputValue || ' '}</Text>
+                <Text style={[styles.inputText, { color: colors.text }]}>{inputValue || ' '}</Text>
               </View>
               <Numpad onPress={onNumpadPress} onDelete={onNumpadDelete} />
               <TouchableOpacity
@@ -228,8 +230,8 @@ export default function GameScreen() {
           </Text>
         </View>
 
-        <TouchableOpacity style={styles.abandonBtn} onPress={() => setShowQuit(true)} activeOpacity={0.7}>
-          <Text style={styles.abandonText}>{getStrings().abandon}</Text>
+        <TouchableOpacity style={[styles.abandonBtn, { backgroundColor: colors.surface, borderColor: colors.border }]} onPress={() => setShowQuit(true)} activeOpacity={0.7}>
+          <Text style={[styles.abandonText, { color: colors.muted }]}>{getStrings().abandon}</Text>
         </TouchableOpacity>
 
         <QuitModal

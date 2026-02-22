@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, Platform } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { Colors, BorderRadius, Spacing } from '../constants/theme';
+import { Colors, BorderRadius, Spacing, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 import { loadHistory, clearHistoryStorage, HistoryEntry } from '../utils/storage';
 import HistoryEntryRow from '../components/HistoryEntry';
@@ -20,6 +20,7 @@ export default function HistoryScreen() {
   }, []);
 
   const s = getStrings();
+  const colors = useColors();
 
   const handleClear = useCallback(() => {
     const doClear = async () => {
@@ -43,14 +44,14 @@ export default function HistoryScreen() {
   }, [s]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.card}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.bg }]} showsVerticalScrollIndicator={false}>
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
         <AppHeader compact />
-        <Text style={styles.title}>{s.historyTitle}</Text>
-        <Text style={styles.sub}>{s.historySub}</Text>
+        <Text style={[styles.title, { color: colors.primary }]}>{s.historyTitle}</Text>
+        <Text style={[styles.sub, { color: colors.muted }]}>{s.historySub}</Text>
 
         {history.length === 0 ? (
-          <Text style={styles.empty}>{s.historyEmpty}</Text>
+          <Text style={[styles.empty, { color: colors.lightMuted }]}>{s.historyEmpty}</Text>
         ) : (
           <>
             {history.map((e, i) => (
@@ -58,14 +59,14 @@ export default function HistoryScreen() {
                 <HistoryEntryRow entry={e} />
               </TouchableOpacity>
             ))}
-            <TouchableOpacity style={styles.btnClear} onPress={handleClear} activeOpacity={0.7}>
+            <TouchableOpacity style={[styles.btnClear, { backgroundColor: colors.dangerSurface }]} onPress={handleClear} activeOpacity={0.7}>
               <Text style={styles.btnClearText}>{s.historyClear}</Text>
             </TouchableOpacity>
           </>
         )}
 
-        <TouchableOpacity style={styles.btnSecondary} onPress={() => nav.goBack()} activeOpacity={0.7}>
-          <Text style={styles.btnSecondaryText}>{s.menu}</Text>
+        <TouchableOpacity style={[styles.btnSecondary, { backgroundColor: colors.btnSecondary }]} onPress={() => nav.goBack()} activeOpacity={0.7}>
+          <Text style={[styles.btnSecondaryText, { color: colors.text }]}>{s.menu}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

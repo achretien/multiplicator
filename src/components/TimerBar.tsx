@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants/theme';
+import { Colors, useColors } from '../constants/theme';
 
 interface Props {
   timeLeft: number;
@@ -8,14 +8,15 @@ interface Props {
 }
 
 export default function TimerBar({ timeLeft, totalTime }: Props) {
+  const colors = useColors();
   const pct = (timeLeft / totalTime) * 100;
 
   return (
     <View style={styles.wrap}>
-      <View style={styles.bar}>
+      <View style={[styles.bar, { backgroundColor: colors.border }]}>
         <View style={[styles.fill, { width: `${pct}%` }]} />
       </View>
-      <Text style={styles.text}>{Math.ceil(timeLeft)}s</Text>
+      <Text style={[styles.text, { color: colors.muted }]}>{Math.ceil(timeLeft)}s</Text>
     </View>
   );
 }

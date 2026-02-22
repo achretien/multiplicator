@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { Colors, BorderRadius, Spacing, MODE_LABELS, PLAYERS } from '../constants/theme';
+import { Colors, BorderRadius, Spacing, MODE_LABELS, PLAYERS, useColors } from '../constants/theme';
 import { getStrings } from '../constants/strings';
 import { QuestionResult, formatDate } from '../utils/storage';
 import AppHeader from '../components/AppHeader';
@@ -15,12 +15,13 @@ type RouteProps = RouteProp<RootStackParamList, 'GameDetail'>;
 
 function SoloRow({ result, index }: { result: QuestionResult; index: number }) {
   const s = getStrings();
+  const colors = useColors();
   const isTimeout = result.given === -1;
   return (
     <View style={[styles.row, result.correct ? styles.rowCorrect : styles.rowWrong]}>
-      <Text style={styles.rowNum}>{index + 1}</Text>
+      <Text style={[styles.rowNum, { color: colors.muted }]}>{index + 1}</Text>
       <View style={styles.rowCenter}>
-        <Text style={styles.rowQuestion}>
+        <Text style={[styles.rowQuestion, { color: colors.text }]}>
           {result.a} × {result.b} ={' '}
           {isTimeout ? (
             <Text style={styles.rowTimeout}>{s.gameDetailTimeout}</Text>
@@ -34,7 +35,7 @@ function SoloRow({ result, index }: { result: QuestionResult; index: number }) {
       </View>
       <View style={styles.rowRight}>
         <Text style={styles.rowIcon}>{result.correct ? '✅' : '❌'}</Text>
-        <Text style={styles.rowTime}>{result.elapsed.toFixed(1)}s</Text>
+        <Text style={[styles.rowTime, { color: colors.muted }]}>{result.elapsed.toFixed(1)}s</Text>
       </View>
     </View>
   );
@@ -44,10 +45,11 @@ function SoloRow({ result, index }: { result: QuestionResult; index: number }) {
 
 function DuelCell({ result, fastest }: { result: QuestionResult; fastest?: boolean }) {
   const s = getStrings();
+  const colors = useColors();
   const isTimeout = result.given === -1;
   return (
     <View style={[styles.cell, result.correct ? styles.cellCorrect : styles.cellWrong, fastest && styles.cellFastest]}>
-      <Text style={styles.cellQuestion} numberOfLines={1}>
+      <Text style={[styles.cellQuestion, { color: colors.text }]} numberOfLines={1}>
         {result.a}×{result.b}={' '}
         {isTimeout ? (
           <Text style={styles.cellTimeout}>{s.gameDetailTimeout}</Text>
@@ -60,7 +62,7 @@ function DuelCell({ result, fastest }: { result: QuestionResult; fastest?: boole
       </Text>
       <View style={styles.cellMeta}>
         <Text style={styles.cellIcon}>{result.correct ? '✅' : '❌'}</Text>
-        <Text style={styles.cellTime}>{fastest ? '⚡' : ''}{result.elapsed.toFixed(1)}s</Text>
+        <Text style={[styles.cellTime, { color: colors.muted }]}>{fastest ? '⚡' : ''}{result.elapsed.toFixed(1)}s</Text>
       </View>
     </View>
   );
@@ -71,13 +73,14 @@ function DuelTableRow({ childResult, parentResult, index }: {
   parentResult?: QuestionResult;
   index: number;
 }) {
+  const colors = useColors();
   const childFastest = !!(childResult && parentResult && childResult.elapsed < parentResult.elapsed);
   const parentFastest = !!(childResult && parentResult && parentResult.elapsed < childResult.elapsed);
 
   return (
     <View style={styles.duelRow}>
       <View style={styles.rowNumWrap}>
-        <Text style={styles.rowNum}>{index + 1}</Text>
+        <Text style={[styles.rowNum, { color: colors.muted }]}>{index + 1}</Text>
       </View>
       <View style={styles.cellWrap}>
         {childResult ? <DuelCell result={childResult} fastest={childFastest} /> : <View style={styles.cellEmpty} />}
@@ -96,6 +99,7 @@ export default function GameDetailScreen() {
   const route = useRoute<RouteProps>();
   const { entry } = route.params;
   const s = getStrings();
+  const colors = useColors();
 
   const isDuel = entry.type === 'duel';
   const maxLen = isDuel
@@ -103,11 +107,11 @@ export default function GameDetailScreen() {
     : 0;
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.card}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.bg }]} showsVerticalScrollIndicator={false}>
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
         <AppHeader compact />
-        <Text style={styles.title}>{s.gameDetailTitle}</Text>
-        <Text style={styles.meta}>
+        <Text style={[styles.title, { color: colors.primary }]}>{s.gameDetailTitle}</Text>
+        <Text style={[styles.meta, { color: colors.muted }]}>
           {isDuel ? '⚔️ Duel' : '🚀 Solo'}{' · '}
           {MODE_LABELS[entry.mode] || entry.mode}{' · '}
           {formatDate(entry.date)}
@@ -127,7 +131,7 @@ export default function GameDetailScreen() {
             </View>
 
             {maxLen === 0 ? (
-              <Text style={styles.noData}>{s.gameDetailNoData}</Text>
+              <Text style={[styles.noData, { color: colors.lightMuted }]}>{s.gameDetailNoData}</Text>
             ) : (
               <View style={styles.duelList}>
                 {Array.from({ length: maxLen }, (_, i) => (
@@ -143,7 +147,7 @@ export default function GameDetailScreen() {
           </>
         ) : (
           !entry.questions?.length ? (
-            <Text style={styles.noData}>{s.gameDetailNoData}</Text>
+            <Text style={[styles.noData, { color: colors.lightMuted }]}>{s.gameDetailNoData}</Text>
           ) : (
             <View style={styles.list}>
               {entry.questions.map((q, i) => (
@@ -153,8 +157,8 @@ export default function GameDetailScreen() {
           )
         )}
 
-        <TouchableOpacity style={styles.btnBack} onPress={() => nav.goBack()} activeOpacity={0.7}>
-          <Text style={styles.btnBackText}>← Retour</Text>
+        <TouchableOpacity style={[styles.btnBack, { backgroundColor: colors.btnSecondary }]} onPress={() => nav.goBack()} activeOpacity={0.7}>
+          <Text style={[styles.btnBackText, { color: colors.text }]}>← Retour</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
